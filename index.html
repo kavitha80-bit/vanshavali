@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanshavali — Why Your Family Tree Matters</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Telugu:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FBF5E9;--bg2:#F4EAD5;--bg3:#EDE0C4;
+  --surface:#FFFFFF;--surface2:#FDF8EF;
+  --border:#DFC99E;--border2:#C4A055;
+  --ink:#241406;--bark:#5A3310;--muted:#8C6B3E;--faint:#C8A870;
+  --gold:#B07A08;--gold2:#D09A18;--gold-dim:rgba(176,122,8,0.09);
+  --saffron:#C4781A;
+  --leaf:#2E6B20;--leaf2:#3E8A2C;--leaf-dim:rgba(46,107,32,0.09);
+  --terra:#A84818;--terra-dim:rgba(168,72,24,0.09);
+  --sky:#3A6E8A;--sky-dim:rgba(58,110,138,0.09);
+  --plum:#6A3A7A;--plum-dim:rgba(106,58,122,0.09);
+  --shadow:0 2px 10px rgba(80,48,8,0.09);
+  --shadow2:0 4px 20px rgba(80,48,8,0.13);
+  --r:10px;
+}
+html{background:var(--bg)}
+body{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  color:var(--ink);background:var(--bg);
+  background-image:
+    radial-gradient(ellipse at 8% 4%,rgba(176,122,8,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 94% 96%,rgba(46,107,32,0.05) 0%,transparent 50%);
+  overflow-x:hidden;
+}
+
+/* ── HEADER ── */
+header{
+  padding:14px 24px;border-bottom:1px solid var(--border);
+  background:rgba(251,245,233,0.97);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:60;
+  box-shadow:0 1px 6px rgba(80,48,8,0.07);
+  display:flex;align-items:center;gap:10px;
+}
+.logo{font-family:'Yeseva One',serif;font-size:1.1rem;color:var(--gold)}
+.lang-btns{display:flex;gap:4px;margin-left:auto}
+.lb{
+  padding:5px 11px;font-size:11px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);cursor:pointer;
+  border-radius:4px;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .2s;
+}
+.lb.active{border-color:var(--gold2);color:var(--gold);background:var(--gold-dim)}
+
+/* ── HERO ── */
+.hero{
+  max-width:720px;margin:0 auto;
+  padding:56px 24px 40px;text-align:center;
+}
+.hero-icon{font-size:3.2rem;margin-bottom:16px;line-height:1}
+.hero-title{
+  font-family:'Yeseva One',serif;
+  font-size:clamp(1.8rem,5vw,2.8rem);
+  color:var(--bark);line-height:1.15;margin-bottom:14px;
+}
+.hero-title em{color:var(--gold);font-style:normal}
+.hero-sub{
+  font-size:clamp(14px,2.5vw,16px);color:var(--muted);
+  line-height:1.75;max-width:560px;margin:0 auto 28px;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;
+  background:linear-gradient(135deg,var(--gold),var(--saffron));
+  color:white;border:none;border-radius:var(--r);
+  font-family:'Yeseva One',serif;font-size:1rem;
+  cursor:pointer;box-shadow:0 3px 14px rgba(176,122,8,0.38);
+  transition:all .2s;text-decoration:none;
+}
+.hero-cta:hover{box-shadow:0 5px 22px rgba(176,122,8,0.48);transform:translateY(-1px)}
+
+/* ── STATS ROW ── */
+.stats{
+  display:flex;gap:0;max-width:720px;margin:0 auto 60px;
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.stat{
+  flex:1;padding:18px 14px;text-align:center;
+  background:var(--surface);border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none}
+.stat-val{
+  font-family:'Yeseva One',serif;font-size:1.6rem;
+  color:var(--bark);line-height:1;margin-bottom:4px;
+}
+.stat-lbl{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* ── SECTION ── */
+.section{max-width:720px;margin:0 auto;padding:0 24px 72px}
+.sec-label{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Yeseva One',serif;font-size:.75rem;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gold);
+  margin-bottom:8px;
+}
+.sec-label::before{content:'';flex:1;height:1px;background:var(--border)}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-title{
+  font-family:'Yeseva One',serif;font-size:clamp(1.3rem,3.5vw,1.9rem);
+  color:var(--bark);text-align:center;margin-bottom:8px;line-height:1.25;
+}
+.sec-sub{
+  font-size:13.5px;color:var(--muted);text-align:center;
+  line-height:1.75;max-width:560px;margin:0 auto 36px;
+}
+
+/* ── REASON CARDS ── */
+.reasons{display:flex;flex-direction:column;gap:16px}
+
+.reason{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--shadow);
+  overflow:hidden;transition:box-shadow .2s;
+}
+.reason:hover{box-shadow:var(--shadow2)}
+
+.reason-head{
+  padding:18px 20px;display:flex;gap:14px;align-items:flex-start;
+}
+.r-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Yeseva One',serif;font-size:.85rem;
+  flex-shrink:0;margin-top:2px;
+}
+.r-icon{font-size:1.6rem;flex-shrink:0;line-height:1;margin-top:2px}
+.r-content{flex:1}
+.r-title{
+  font-family:'Yeseva One',serif;font-size:1.05rem;
+  margin-bottom:6px;line-height:1.3;
+}
+.r-body{font-size:13px;color:var(--muted);line-height:1.75}
+.r-body strong{color:var(--bark)}
+
+/* Color variants */
+.reason.health .r-num{background:var(--terra-dim);color:var(--terra)}
+.reason.health .r-title{color:var(--terra)}
+.reason.marriage .r-num{background:var(--plum-dim);color:var(--plum)}
+.reason.marriage .r-title{color:var(--plum)}
+.reason.heritage .r-num{background:var(--gold-dim);color:var(--gold)}
+.reason.heritage .r-title{color:var(--gold)}
+.reason.identity .r-num{background:var(--sky-dim);color:var(--sky)}
+.reason.identity .r-title{color:var(--sky)}
+.reason.medical .r-num{background:var(--leaf-dim);color:var(--leaf)}
+.reason.medical .r-title{color:var(--leaf)}
+
+/* Accent strip */
+.reason::before{content:'';display:block;height:3px}
+.reason.health::before{background:var(--terra)}
+.reason.marriage::before{background:var(--plum)}
+.reason.heritage::before{background:var(--gold)}
+.reason.identity::before{background:var(--sky)}
+.reason.medical::before{background:var(--leaf)}
+
+/* Fact box */
+.fact-box{
+  margin:0 20px 18px;
+  padding:12px 15px;
+  border-radius:7px;
+  font-size:12.5px;line-height:1.7;
+}
+.reason.health .fact-box{background:var(--terra-dim);border:1px solid rgba(168,72,24,0.2);color:var(--terra)}
+.reason.marriage .fact-box{background:var(--plum-dim);border:1px solid rgba(106,58,122,0.2);color:var(--plum)}
+.reason.heritage .fact-box{background:var(--gold-dim);border:1px solid rgba(176,122,8,0.2);color:var(--gold)}
+.reason.identity .fact-box{background:var(--sky-dim);border:1px solid rgba(58,110,138,0.2);color:var(--sky)}
+.reason.medical .fact-box{background:var(--leaf-dim);border:1px solid rgba(46,107,32,0.2);color:var(--leaf)}
+.fact-box strong{color:var(--bark)}
+
+/* ── DIVIDER ── */
+.divider{
+  max-width:720px;margin:0 auto 60px;
+  height:1px;background:var(--border);
+}
+
+/* ── GOTRA SECTION ── */
+.gotra-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--r);box-shadow:var(--shadow2);
+  overflow:hidden;max-width:720px;margin:0 auto 60px;
+}
+.gotra-head{
+  background:linear-gradient(135deg,var(--bg2),#F8EDD8);
+  padding:22px 24px;border-bottom:1px solid var(--border);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.gotra-icon{font-size:2rem;flex-shrink:0}
+.gotra-title{font-family:'Yeseva One',serif;font-size:1.1rem;color:var(--bark);margin-bottom:5px}
+.gotra-sub{font-size:13px;color:var(--muted);line-height:1.7}
+.gotra-body{padding:20px 24px;display:flex;flex-direction:column;gap:12px}
+.gotra-item{display:flex;gap:12px;align-items:flex-start}
+.gi-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);flex-shrink:0;margin-top:6px;
+}
+.gi-text{font-size:13px;color:var(--muted);line-height:1.7}
+.gi-text strong{color:var(--bark)}
+
+/* ── CALL TO ACTION ── */
+.cta-section{
+  background:linear-gradient(135deg,var(--surface),#FFF8E8);
+  border:1.5px solid var(--border2);border-radius:16px;
+  padding:40px 28px;text-align:center;
+  max-width:720px;margin:0 auto 60px;
+  box-shadow:var(--shadow2);
+}
+.cta-icon{font-size:2.5rem;margin-bottom:12px}
+.cta-title{
+  font-family:'Yeseva One',serif;font-size:clamp(1.3rem,3.5vw,1.8rem);
+  color:var(--bark);margin-bottom:10px;
+}
+.cta-sub{font-size:13.5px;color:var(--muted);line-height:1.75;margin-bottom:22px;max-width:500px;margin-left:auto;margin-right:auto}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;
+  background:linear-gradient(135deg,var(--gold),var(--saffron));
+  color:white;border:none;border-radius:var(--r);
+  font-family:'Yeseva One',serif;font-size:1rem;
+  cursor:pointer;box-shadow:0 3px 14px rgba(176,122,8,0.38);
+  transition:all .2s;
+}
+.cta-btn:hover{box-shadow:0 5px 22px rgba(176,122,8,0.48);transform:translateY(-1px)}
+.cta-note{font-size:11.5px;color:var(--faint);margin-top:12px}
+
+/* ── QUOTE ── */
+.quote-strip{
+  background:var(--bg2);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:28px 24px;text-align:center;margin-bottom:60px;
+}
+.quote-text{
+  font-family:'Yeseva One',serif;font-style:italic;
+  font-size:clamp(1rem,2.5vw,1.3rem);color:var(--bark);
+  max-width:560px;margin:0 auto 8px;line-height:1.55;
+}
+.quote-src{font-size:12px;color:var(--muted)}
+
+footer{
+  border-top:1px solid var(--border);padding:24px;
+  text-align:center;font-size:12px;color:var(--muted);
+}
+
+@media(max-width:600px){
+  .stats{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .stat:last-child{border-bottom:none}
+  .hero-cta,.cta-btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌳 Vanshavali</div>
+  <div class="lang-btns">
+    <button class="lb active" onclick="setLang('en')">English</button>
+    <button class="lb" onclick="setLang('te')">తెలుగు</button>
+    <button class="lb" onclick="setLang('hi')">हिंदी</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-icon">🌳</div>
+  <h1 class="hero-title" id="heroTitle">Your family tree is<br><em>more than memories</em></h1>
+  <p class="hero-sub" id="heroSub">Every name you add protects your descendants' health, preserves your ancestors' stories, and strengthens the roots of who you are. Here's why it matters more than you think.</p>
+  <a href="join.html?fresh=1" class="hero-cta" id="heroCta">🌳 Start Your Family Tree</a>
+</div>
+
+<!-- STATS -->
+<div class="stats" style="padding:0 24px;max-width:720px;margin:0 auto 52px">
+  <div class="stat">
+    <div class="stat-val">~10%</div>
+    <div class="stat-lbl" id="stat1Lbl">of Indian marriages involve blood relatives</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">4–6×</div>
+    <div class="stat-lbl" id="stat2Lbl">higher risk of genetic disorders in first-cousin marriages</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">3+</div>
+    <div class="stat-lbl" id="stat3Lbl">generations of stories lost every 50 years without a record</div>
+  </div>
+</div>
+
+<!-- REASONS SECTION -->
+<div class="section">
+  <div class="sec-label" id="secLabel1">Why it matters</div>
+  <h2 class="sec-title" id="secTitle1">8 reasons to build your Vansha Vruksham today</h2>
+  <p class="sec-sub" id="secSub1">Not just for memories — for your children's health, marriages, identity, and connection to their roots.</p>
+
+  <div class="reasons" id="reasonsList">
+
+    <!-- 1. Genetic health -->
+    <div class="reason health">
+      <div class="reason-head">
+        <span class="r-num">1</span>
+        <span class="r-icon">🧬</span>
+        <div class="r-content">
+          <div class="r-title" id="r1t">Protect your family from hidden genetic diseases</div>
+          <div class="r-body" id="r1b">Many serious conditions — thalassemia, sickle cell disease, congenital heart defects, certain hearing and vision disorders — are <strong>recessive genetic conditions</strong>. This means both parents must carry the faulty gene for their child to be affected. When parents are closely related, they are far more likely to carry the same faulty gene without knowing it.<br><br>A family tree makes these patterns visible. If thalassemia appears in one branch, a doctor can screen the other branch before marriage or pregnancy.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        📊 <strong>Research finding:</strong> Children of first-cousin marriages face a 4–6% risk of autosomal recessive genetic disorders, compared to 2–3% for unrelated parents. India has approximately 100,000 new thalassemia-affected children born each year — many from preventable consanguineous unions.
+      </div>
+    </div>
+
+    <!-- 2. Marriage safety -->
+    <div class="reason marriage">
+      <div class="reason-head">
+        <span class="r-num">2</span>
+        <span class="r-icon">💍</span>
+        <div class="r-content">
+          <div class="r-title" id="r2t">Know before marriage if two families share blood</div>
+          <div class="r-body" id="r2b">In large joint families — especially across Telugu, Tamil, and other South Indian communities — cousin marriages are traditional and accepted. But with <strong>families spread across cities, countries, and generations</strong>, it is increasingly easy to lose track of who is related to whom.<br><br>A digital family tree lets both families check for shared ancestry in seconds, before marriage discussions begin. This is not about stigma — it is about making an informed, empowered choice.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        📊 <strong>About 10% of Indian marriages</strong> involve blood relatives (Business Standard, 2026). Awareness of genetic risks remains low, and many families have a false sense of security because earlier children appeared healthy — but the underlying genetic risk does not disappear.
+      </div>
+    </div>
+
+    <!-- 3. Heritage -->
+    <div class="reason heritage">
+      <div class="reason-head">
+        <span class="r-num">3</span>
+        <span class="r-icon">🏛️</span>
+        <div class="r-content">
+          <div class="r-title" id="r3t">Preserve your ancestral village, stories and culture</div>
+          <div class="r-body" id="r3b">Your great-grandmother knew the name of every family in her village. Your grandfather knew the history of your gotra going back ten generations. <strong>That knowledge is dying with them.</strong><br><br>Within one generation, the names of ancestral villages, traditional occupations, family legends, and cultural rituals vanish if not recorded. Vanshavali is a living archive — the first time your family's story is written down so your great-grandchildren can read it.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        📖 <strong>3 generations = ~75 years.</strong> Without a written record, the names and stories of great-grandparents are almost entirely forgotten. You are the last generation who knows your grandparents' stories. This is the right moment to write them down.
+      </div>
+    </div>
+
+    <!-- 4. Identity -->
+    <div class="reason identity">
+      <div class="reason-head">
+        <span class="r-num">4</span>
+        <span class="r-icon">🧭</span>
+        <div class="r-content">
+          <div class="r-title" id="r4t">Give your children a clear sense of who they are</div>
+          <div class="r-body" id="r4b">Research consistently shows that children who know their family history have <strong>stronger emotional resilience, higher self-esteem, and a clearer sense of identity</strong>. Knowing "I am from the Bharadwaj gotra, my dada ji was a farmer in Karimnagar, my nana ji fought in 1947" gives a child an anchor.<br><br>Your family tree is not just a chart — it is the story your grandchildren will tell their grandchildren.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        🔬 <strong>The "Do You Know?" scale</strong> — a well-studied psychological measure — shows that children who know their family history score significantly higher on resilience and well-being during times of stress and uncertainty.
+      </div>
+    </div>
+
+    <!-- 5. Family health history -->
+    <div class="reason medical">
+      <div class="reason-head">
+        <span class="r-num">5</span>
+        <span class="r-icon">🩺</span>
+        <div class="r-content">
+          <div class="r-title" id="r5t">Your family history is your most powerful medical record</div>
+          <div class="r-body" id="r5b">Diabetes, heart disease, hypertension, certain cancers — all have a genetic component. When a doctor knows that your father, his father, and his father all had Type 2 diabetes, they can start screening 20 years earlier and advise lifestyle changes before the disease appears.<br><br>The family tree <strong>turns inherited risk into preventable outcomes</strong>. Most people don't know their grandfather's cause of death. Many lives could be saved if they did.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        🩺 <strong>Family medical history</strong> is recognized by medical organizations worldwide as the single most cost-effective screening tool available — more predictive than expensive genetic tests for common conditions like heart disease, diabetes, and certain cancers.
+      </div>
+    </div>
+
+    <!-- 6. Nakshatra & Gotra -->
+    <div class="reason heritage">
+      <div class="reason-head">
+        <span class="r-num">6</span>
+        <span class="r-icon">⭐</span>
+        <div class="r-content">
+          <div class="r-title" id="r6t">Preserve Nakshatra and Gotra — the original family record system</div>
+          <div class="r-body" id="r6b">India's ancient rishis created the gotra system as exactly this — a way to track patrilineal descent and prevent marriages between close relatives. The Nakshatra at birth was recorded by pandits for exactly the same reason.<br><br>But this knowledge is <strong>disappearing from family memory</strong>. Kundlis are lost, pandits have passed away, ancestral records are not digitised. Vanshavali preserves the gotra, the Nakshatra, and the lineage permanently — the way it was always meant to be kept.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        🕉️ <strong>The gotra system</strong> was India's original genetic registry — designed 3,000+ years ago to prevent close-relative marriages within the same patrilineal line. Preserving it digitally is restoring an ancient practice with modern tools.
+      </div>
+    </div>
+
+    <!-- 7. NRI diaspora connection -->
+    <div class="reason identity">
+      <div class="reason-head">
+        <span class="r-num">7</span>
+        <span class="r-icon">🌍</span>
+        <div class="r-content">
+          <div class="r-title" id="r7t">Reconnect scattered families across countries and generations</div>
+          <div class="r-body" id="r7b">35 million Indians live outside India. Families have branches in the US, UK, UAE, Singapore, Australia — and many cousins have never met. <strong>Third-generation NRI children often don't know their Indian relatives at all.</strong><br><br>A shared digital family tree becomes the meeting point — where a cousin in California can see their great-grandmother's name, and a relative in Hyderabad can see the whole family including those who moved abroad decades ago.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        🌏 <strong>35.4 million Indians</strong> live outside India (Ministry of External Affairs, 2024). Many second- and third-generation NRIs have lost touch with their Indian family. A shared tree is the bridge.
+      </div>
+    </div>
+
+    <!-- 8. Legal / property -->
+    <div class="reason medical">
+      <div class="reason-head">
+        <span class="r-num">8</span>
+        <span class="r-icon">⚖️</span>
+        <div class="r-content">
+          <div class="r-title" id="r8t">Resolve inheritance and legal heir disputes with clarity</div>
+          <div class="r-body" id="r8b">Property disputes between relatives are among the most common legal conflicts in India. Ancestral property cases often drag on for decades because <strong>no one can prove who is whose child, who preceded whom, or who the legal heirs are.</strong><br><br>A well-documented family tree — with birth years, places, and relationships — is powerful evidence. Vanshavali will offer a legally formatted heir chart as a paid feature for exactly this purpose.</div>
+        </div>
+      </div>
+      <div class="fact-box">
+        ⚖️ India's courts handle millions of inheritance and succession disputes every year. A documented family tree with dates and relationships is among the most useful documents a family can have for property and succession matters.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GOTRA SECTION -->
+<div style="padding:0 24px;max-width:720px;margin:0 auto 60px">
+  <div class="gotra-box">
+    <div class="gotra-head">
+      <div class="gotra-icon">🕉️</div>
+      <div>
+        <div class="gotra-title" id="gotraTitle">The gotra system — India's 3,000-year genetic registry</div>
+        <div class="gotra-sub" id="gotraSub">Our ancestors understood genetics before the word existed. The gotra system was their solution — and it still works.</div>
+      </div>
+    </div>
+    <div class="gotra-body">
+      <div class="gotra-item">
+        <div class="gi-dot"></div>
+        <div class="gi-text" id="gi1"><strong>Same gotra = same patrilineal ancestor.</strong> The rule "never marry within the same gotra" exists because two people of the same gotra share a common male ancestor — meaning they share genes. Avoiding this marriage reduces the risk of recessive genetic disease expression in children.</div>
+      </div>
+      <div class="gotra-item">
+        <div class="gi-dot"></div>
+        <div class="gi-text" id="gi2"><strong>Nakshatra was the birth record.</strong> Before civil registration systems, the Nakshatra at birth (recorded by a family pandit) was a person's official identifier — used in marriage matching, legal identity, and religious ceremonies. Preserving it digitally continues this tradition.</div>
+      </div>
+      <div class="gotra-item">
+        <div class="gi-dot"></div>
+        <div class="gi-text" id="gi3"><strong>The knowledge is disappearing.</strong> As the generation that knew these things ages and passes, and as nuclear families replace joint families, this ancient knowledge is being lost. Many people today do not know their own gotra. Vanshavali exists to preserve it.</div>
+      </div>
+      <div class="gotra-item">
+        <div class="gi-dot"></div>
+        <div class="gi-text" id="gi4"><strong>Vanshavali's gotra checker (coming soon)</strong> will instantly flag if two families share a gotra before marriage discussions begin — combining the ancient wisdom of the gotra system with modern digital convenience.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-strip">
+  <div class="quote-text" id="quoteText">"The person who has no knowledge of their past, origin and culture is like a tree without roots."</div>
+  <div class="quote-src" id="quoteSrc">— Marcus Garvey · A truth that belongs to every culture</div>
+</div>
+
+<!-- CTA -->
+<div style="padding:0 24px">
+  <div class="cta-section">
+    <div class="cta-icon">🌳</div>
+    <div class="cta-title" id="ctaTitle">Start your family tree today.<br>It takes 2 minutes.</div>
+    <div class="cta-sub" id="ctaSub">Add yourself, your parents, your grandparents. Every name you enter is a gift to the generations that come after you. No app to download. No signup. Just your family's story, preserved forever.</div>
+    <button class="cta-btn" onclick="window.location.href='join.html?fresh=1'">
+      <span>🌳</span> <span id="ctaBtnLabel">Start My Family Tree — Free</span>
+    </button>
+    <div class="cta-note" id="ctaNote">Free forever for personal use · No app to download · No signup required</div>
+  </div>
+</div>
+
+<footer id="footerText">
+  🌳 Vanshavali · Preserving Indian family heritage · vanshavali.in
+</footer>
+
+<script>
+const STRINGS = {
+  en:{
+    heroTitle:'Your family tree is<br><em>more than memories</em>',
+    heroSub:"Every name you add protects your descendants' health, preserves your ancestors' stories, and strengthens the roots of who you are.",
+    heroCta:'🌳 Start Your Family Tree',
+    stat1:'of Indian marriages involve blood relatives',
+    stat2:'higher risk of genetic disorders in first-cousin marriages',
+    stat3:'generations of stories lost every 50 years without a record',
+    secLabel:'Why it matters',
+    secTitle:'8 reasons to build your Vansha Vruksham today',
+    secSub:'Not just for memories — for your children\'s health, marriages, identity, and connection to their roots.',
+    r:[
+      {t:'Protect your family from hidden genetic diseases',b:'Many serious conditions — thalassemia, sickle cell disease, congenital heart defects — are <strong>recessive genetic conditions</strong>. When parents are closely related, they are far more likely to carry the same faulty gene without knowing it. A family tree makes these patterns visible — giving doctors early warning before disease appears.'},
+      {t:'Know before marriage if two families share blood',b:'In large joint families, with relatives spread across cities and countries, it is easy to lose track of who is related to whom. A digital family tree lets both families <strong>check for shared ancestry in seconds</strong>, before marriage discussions begin — not to create stigma, but to enable informed, empowered choices.'},
+      {t:'Preserve your ancestral village, stories and culture',b:'Your great-grandmother knew the name of every family in her village. Your grandfather knew your gotra\'s history going back ten generations. <strong>That knowledge is dying with them.</strong> Within one generation, ancestral villages, occupations, family legends, and rituals vanish if not recorded.'},
+      {t:'Give your children a clear sense of who they are',b:'Children who know their family history have <strong>stronger emotional resilience, higher self-esteem, and a clearer sense of identity</strong>. Knowing "I am from the Bharadwaj gotra, my dada ji farmed in Karimnagar" gives a child an anchor nothing else can provide.'},
+      {t:'Your family history is your most powerful medical record',b:'Diabetes, heart disease, hypertension, certain cancers — all have a genetic component. When a doctor knows your father and grandfather both had Type 2 diabetes, they can screen 20 years earlier. The family tree <strong>turns inherited risk into preventable outcomes.</strong>'},
+      {t:'Preserve Nakshatra and Gotra — the original family record',b:'India\'s gotra system was designed 3,000+ years ago to prevent close-relative marriages within the same patrilineal line. Kundlis and gotra records are being lost as joint families break apart. <strong>Vanshavali preserves them permanently</strong> — restoring ancient wisdom with modern tools.'},
+      {t:'Reconnect scattered families across countries and generations',b:'35 million Indians live outside India. Third-generation NRI children often don\'t know their Indian relatives at all. A shared digital family tree becomes <strong>the meeting point</strong> — where a cousin in California can see their great-grandmother\'s name, and a relative in Hyderabad sees the whole family.'},
+      {t:'Resolve inheritance and legal heir disputes with clarity',b:'Property disputes between relatives are among India\'s most common legal conflicts. A well-documented family tree — with birth years, places, and relationships — is powerful evidence. <strong>Vanshavali will offer a legally formatted heir chart</strong> as a paid feature for exactly this purpose.'},
+    ],
+    gotraTitle:'The gotra system — India\'s 3,000-year genetic registry',
+    gotraSub:'Our ancestors understood genetics before the word existed. The gotra system was their solution.',
+    gi:['<strong>Same gotra = same patrilineal ancestor.</strong> The "never marry within the same gotra" rule exists because two people of the same gotra share a common male ancestor — meaning shared genes. Avoiding this marriage reduces recessive genetic disease risk in children.',
+        '<strong>Nakshatra was the birth record.</strong> Before civil registration, Nakshatra at birth was a person\'s official identifier — used in marriage matching, legal identity, and religious ceremonies. Preserving it digitally continues this tradition.',
+        '<strong>The knowledge is disappearing.</strong> As joint families break apart and the generation that knew these things ages, this ancient knowledge is being lost. Many people today do not know their own gotra.',
+        '<strong>Vanshavali\'s gotra checker (coming soon)</strong> will instantly flag if two families share a gotra before marriage discussions begin — ancient wisdom, modern convenience.'],
+    quote:'"The person who has no knowledge of their past, origin and culture is like a tree without roots."',
+    quoteSrc:'— Marcus Garvey · A truth that belongs to every culture',
+    ctaTitle:'Start your family tree today.<br>It takes 2 minutes.',
+    ctaSub:"Add yourself, your parents, your grandparents. Every name you enter is a gift to the generations that come after you. No app to download. No signup.",
+    ctaBtn:'🌳 Start My Family Tree — Free',
+    ctaNote:'Free forever for personal use · No app to download · No signup required',
+  },
+  te:{
+    heroTitle:'మీ వంశ వృక్షం<br><em>కేవలం జ్ఞాపకాలు మాత్రమే కాదు</em>',
+    heroSub:'మీరు చేర్చే ప్రతి పేరు మీ వారసుల ఆరోగ్యాన్ని రక్షిస్తుంది, పూర్వీకుల కథలను భద్రపరుస్తుంది.',
+    heroCta:'🌳 మీ కుటుంబ వృక్షం ప్రారంభించండి',
+    stat1:'భారతీయ వివాహాలలో రక్త సంబంధాలు ఉన్నాయి',
+    stat2:'మొదటి కజిన్ వివాహాలలో జన్యు వ్యాధుల ప్రమాదం అధికం',
+    stat3:'రికార్డు లేకుండా ప్రతి 50 సంవత్సరాలకు తరాల కథలు పోతున్నాయి',
+    secLabel:'ఎందుకు ముఖ్యం',
+    secTitle:'నేడే మీ వంశ వృక్షం నిర్మించడానికి 8 కారణాలు',
+    secSub:'జ్ఞాపకాల కోసం మాత్రమే కాదు — మీ పిల్లల ఆరోగ్యం, వివాహాలు, గుర్తింపు కోసం.',
+    r:[
+      {t:'దాగి ఉన్న జన్యు వ్యాధుల నుండి కుటుంబాన్ని రక్షించండి',b:'థలసేమియా, సికిల్ సెల్, జన్మ హృదయ లోపాలు — ఇవి <strong>రెసెసివ్ జన్యు పరిస్థితులు</strong>. తల్లిదండ్రులు దగ్గరి సంబంధీకులైనప్పుడు ఒకే తప్పుడు జన్యువు ఉంచే అవకాశం చాలా ఎక్కువ. కుటుంబ వృక్షం ఈ నమూనాలను స్పష్టంగా చూపిస్తుంది.'},
+      {t:'వివాహానికి ముందు రెండు కుటుంబాలు రక్త సంబంధాలు కలిగి ఉన్నారా అని తెలుసుకోండి',b:'పెద్ద జాయింట్ కుటుంబాలలో, నగరాలు మరియు దేశాలలో చెదిరిన బంధువులతో, ఎవరు ఎవరికి సంబంధికులో ట్రాక్ చేయడం కష్టం. డిజిటల్ కుటుంబ వృక్షం <strong>సెకన్లలో సాధారణ వంశావళిని తనిఖీ</strong> చేయడానికి అనుమతిస్తుంది.'},
+      {t:'పూర్వీకుల గ్రామం, కథలు మరియు సంస్కృతిని కాపాడండి',b:'మీ ముత్తాత గ్రామంలోని ప్రతి కుటుంబం పేరు తెలుసు. మీ తాత మీ గోత్రం చరిత్రను పది తరాల వెనుకకు తెలుసు. <strong>ఆ జ్ఞానం వారితో పోతోంది.</strong>'},
+      {t:'మీ పిల్లలకు తాము ఎవరో స్పష్టమైన అవగాహన ఇవ్వండి',b:'కుటుంబ చరిత్ర తెలిసిన పిల్లలు <strong>మానసిక స్థితిస్థాపకత, ఆత్మగౌరవం మరియు గుర్తింపు</strong> బలంగా ఉంటాయి. "నేను భరద్వాజ గోత్రం నుండి, మా తాత కరీంనగర్‌లో రైతు" అని తెలుసుకోవడం పిల్లలకు మూలాన్ని ఇస్తుంది.'},
+      {t:'మీ కుటుంబ చరిత్ర మీ అత్యంత శక్తివంతమైన వైద్య రికార్డు',b:'మధుమేహం, గుండె జబ్బు, రక్తపోటు — ఇవన్నీ జన్యు భాగాన్ని కలిగి ఉన్నాయి. మీ తండ్రి మరియు తాత ఇద్దరూ టైప్ 2 డయాబెటిస్ ఉందని వైద్యుడికి తెలిస్తే, <strong>20 సంవత్సరాల ముందే స్క్రీనింగ్</strong> మొదలు పెట్టవచ్చు.'},
+      {t:'నక్షత్రం మరియు గోత్రం కాపాడండి — అసలు కుటుంబ రికార్డు',b:'భారతదేశ గోత్ర వ్యవస్థ 3,000+ సంవత్సరాల క్రితం రక్త సంబంధ వివాహాలను నిరోధించడానికి రూపొందించబడింది. కుండలీలు మరియు గోత్ర రికార్డులు నాశనమవుతున్నాయి. <strong>Vanshavali వాటిని శాశ్వతంగా భద్రపరుస్తుంది.</strong>'},
+      {t:'దేశాలు మరియు తరాలలో చెదిరిన కుటుంబాలను తిరిగి కలపండి',b:'3.54 కోట్ల మంది భారతీయులు భారతదేశం వెలుపల నివసిస్తున్నారు. మూడవ తరం NRI పిల్లలకు తమ భారతీయ బంధువులు తెలియదు. భాగస్వామ్య డిజిటల్ కుటుంబ వృక్షం <strong>కలిసే స్థలం</strong> అవుతుంది.'},
+      {t:'వారసత్వం మరియు చట్టపరమైన వారసుల వివాదాలను స్పష్టతగా పరిష్కరించండి',b:'ఆస్తి వివాదాలు భారతదేశంలో అత్యంత సాధారణ న్యాయ సంఘర్షణలలో ఒకటి. బాగా డాక్యుమెంట్ చేసిన కుటుంబ వృక్షం — పుట్టిన సంవత్సరాలు, స్థలాలు మరియు సంబంధాలతో — <strong>శక్తివంతమైన సాక్ష్యం.</strong>'},
+    ],
+    gotraTitle:'గోత్ర వ్యవస్థ — భారతదేశపు 3,000 సంవత్సరాల జన్యు రిజిస్ట్రీ',
+    gotraSub:'మన పూర్వీకులు పదాన్ని కనుగొనే ముందే జన్యుశాస్త్రాన్ని అర్థం చేసుకున్నారు.',
+    gi:['<strong>ఒకే గోత్రం = ఒకే పితృ పూర్వీకుడు.</strong> "ఒకే గోత్రంలో పెళ్లి చేయకూడదు" అనే నియమం ఉంది ఎందుకంటే వారు జన్యువులను పంచుకుంటారు.',
+        '<strong>నక్షత్రం పుట్టిన రికార్డు.</strong> సివిల్ నమోదుకు ముందు, జన్మ నక్షత్రం అధికారిక గుర్తింపు — వివాహ మ్యాచింగ్‌లో ఉపయోగించబడింది.',
+        '<strong>జ్ఞానం మాయమవుతోంది.</strong> ఉమ్మడి కుటుంబాలు చెదిరిపోవడంతో, ఈ పురాతన జ్ఞానం కోల్పోతోంది. చాలా మంది ఇప్పుడు తమ సొంత గోత్రం తెలియదు.',
+        '<strong>Vanshavali గోత్ర చెకర్ (త్వరలో)</strong> వివాహ చర్చలకు ముందే రెండు కుటుంబాలు గోత్రాన్ని పంచుకుంటున్నాయో లేదో తక్షణమే తెలుపుతుంది.'],
+    quote:'"గతం, మూలాలు, సంస్కృతి తెలియని వ్యక్తి వేళ్ళు లేని చెట్టు లాంటివాడు."',
+    quoteSrc:'— అన్ని సంస్కృతులకు చెందిన సత్యం',
+    ctaTitle:'నేడే మీ కుటుంబ వృక్షం ప్రారంభించండి.<br>2 నిమిషాలు మాత్రమే.',
+    ctaSub:'మిమ్మల్ని, మీ తల్లిదండ్రులను, తాతలను చేర్చండి. మీరు నమోదు చేసే ప్రతి పేరు తర్వాత తరాలకు బహుమతి.',
+    ctaBtn:'🌳 నా కుటుంబ వృక్షం ప్రారంభించండి — ఉచితం',
+    ctaNote:'వ్యక్తిగత వినియోగం కోసం శాశ్వతంగా ఉచితం · App అవసరం లేదు',
+  },
+  hi:{
+    heroTitle:'आपका वंश वृक्षम्<br><em>सिर्फ यादों से कहीं बढ़कर है</em>',
+    heroSub:'हर नाम जो आप जोड़ते हैं वो आपके वंशजों की सेहत बचाता है, पूर्वजों की कहानियाँ सुरक्षित रखता है।',
+    heroCta:'🌳 अपना परिवार का पेड़ शुरू करें',
+    stat1:'भारतीय विवाहों में रक्त संबंधी शामिल हैं',
+    stat2:'पहले-चचेरे भाई-बहन के विवाह में आनुवंशिक बीमारियों का अधिक खतरा',
+    stat3:'रिकॉर्ड के बिना हर 50 साल में पीढ़ियों की कहानियाँ खो जाती हैं',
+    secLabel:'क्यों जरूरी है',
+    secTitle:'आज ही अपना वंश वृक्षम् बनाने के 8 कारण',
+    secSub:'सिर्फ यादों के लिए नहीं — आपके बच्चों की सेहत, विवाह, पहचान और जड़ों के लिए।',
+    r:[
+      {t:'छुपी हुई आनुवंशिक बीमारियों से परिवार को बचाएं',b:'थैलेसीमिया, सिकल सेल, जन्मजात हृदय दोष — ये <strong>अप्रभावी आनुवंशिक स्थितियां</strong> हैं। जब माता-पिता करीबी रिश्तेदार हों तो एक ही दोषपूर्ण जीन होने की संभावना बहुत अधिक होती है। पारिवारिक पेड़ इन पैटर्नों को स्पष्ट करता है।'},
+      {t:'शादी से पहले जानें कि दो परिवारों में रक्त संबंध तो नहीं',b:'बड़े संयुक्त परिवारों में, जहां रिश्तेदार शहरों और देशों में बिखरे हों, यह ट्रैक करना मुश्किल हो जाता है कि कौन किससे संबंधित है। डिजिटल पारिवारिक पेड़ <strong>सेकंडों में सामान्य वंश की जांच</strong> करने देता है।'},
+      {t:'पूर्वजों का गाँव, कहानियाँ और संस्कृति सुरक्षित रखें',b:'आपकी परदादी गाँव के हर परिवार का नाम जानती थीं। आपके दादा जी गोत्र का इतिहास दस पीढ़ियों तक जानते थे। <strong>वह ज्ञान उनके साथ जा रहा है।</strong>'},
+      {t:'अपने बच्चों को स्पष्ट पहचान दें',b:'जो बच्चे अपनी पारिवारिक इतिहास जानते हैं उनमें <strong>मजबूत भावनात्मक लचीलापन और आत्म-सम्मान</strong> होता है। "मैं भारद्वाज गोत्र से हूँ, मेरे दादा जी करीमनगर में किसान थे" यह जानना बच्चे को एक मजबूत आधार देता है।'},
+      {t:'आपकी पारिवारिक इतिहास सबसे शक्तिशाली चिकित्सा रिकॉर्ड है',b:'मधुमेह, हृदय रोग, उच्च रक्तचाप — सभी का आनुवंशिक हिस्सा होता है। अगर डॉक्टर को पता हो कि आपके पिता और दादा जी दोनों को टाइप 2 मधुमेह था, तो वे <strong>20 साल पहले स्क्रीनिंग</strong> शुरू कर सकते हैं।'},
+      {t:'नक्षत्र और गोत्र सुरक्षित रखें — असली पारिवारिक रिकॉर्ड',b:'भारत की गोत्र प्रणाली 3,000+ साल पहले एक ही पितृ वंश में शादी रोकने के लिए बनाई गई थी। कुंडलियाँ और गोत्र रिकॉर्ड नष्ट हो रहे हैं। <strong>Vanshavali उन्हें हमेशा के लिए सुरक्षित करता है।</strong>'},
+      {t:'देशों और पीढ़ियों में बिखरे परिवारों को फिर से जोड़ें',b:'3.54 करोड़ भारतीय भारत के बाहर रहते हैं। तीसरी पीढ़ी के NRI बच्चे अक्सर अपने भारतीय रिश्तेदारों को नहीं जानते। साझा डिजिटल पारिवारिक पेड़ <strong>मिलन का स्थान</strong> बनता है।'},
+      {t:'विरासत और कानूनी उत्तराधिकारी विवादों को स्पष्टता से सुलझाएं',b:'संपत्ति विवाद भारत में सबसे आम कानूनी संघर्षों में से हैं। जन्म वर्षों, स्थानों और रिश्तों के साथ एक अच्छी तरह से प्रलेखित पारिवारिक पेड़ <strong>शक्तिशाली सबूत</strong> है।'},
+    ],
+    gotraTitle:'गोत्र प्रणाली — भारत की 3,000 साल पुरानी आनुवंशिक रजिस्ट्री',
+    gotraSub:'हमारे पूर्वजों ने शब्द आने से पहले आनुवंशिकता को समझ लिया था।',
+    gi:['<strong>एक ही गोत्र = एक ही पितृ पूर्वज।</strong> "एक ही गोत्र में शादी नहीं" का नियम इसलिए है क्योंकि वे जीन साझा करते हैं।',
+        '<strong>नक्षत्र जन्म रिकॉर्ड था।</strong> नागरिक पंजीकरण से पहले, जन्म नक्षत्र आधिकारिक पहचानकर्ता था — विवाह मिलान में उपयोग किया जाता था।',
+        '<strong>ज्ञान खो रहा है।</strong> जैसे-जैसे संयुक्त परिवार टूट रहे हैं, यह पुरातन ज्ञान खो रहा है। आज बहुत से लोग अपना गोत्र नहीं जानते।',
+        '<strong>Vanshavali का गोत्र चेकर (जल्द आ रहा है)</strong> शादी की बातचीत शुरू होने से पहले तुरंत बताएगा कि दो परिवार गोत्र साझा करते हैं या नहीं।'],
+    quote:'"जो व्यक्ति अपने अतीत, उत्पत्ति और संस्कृति का ज्ञान नहीं रखता वह बिना जड़ों के पेड़ की तरह है।"',
+    quoteSrc:'— मार्कस गार्वे · हर संस्कृति का सत्य',
+    ctaTitle:'आज ही अपना परिवार का पेड़ शुरू करें।<br>बस 2 मिनट लगते हैं।',
+    ctaSub:'अपनी, माता-पिता की, दादा-दादी की जानकारी जोड़ें। हर नाम जो आप जोड़ते हैं वो आने वाली पीढ़ियों के लिए उपहार है।',
+    ctaBtn:'🌳 मेरा परिवार का पेड़ शुरू करें — मुफ्त',
+    ctaNote:'व्यक्तिगत उपयोग के लिए हमेशा मुफ्त · कोई App नहीं · कोई साइनअप नहीं',
+  }
+};
+
+let lang='en';
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lb').forEach(b=>{
+    b.classList.toggle('active',b.textContent.trim()==={en:'English',te:'తెలుగు',hi:'हिंदी'}[l]);
+  });
+  render();
+}
+
+function render(){
+  const s=STRINGS[lang];
+  document.getElementById('heroTitle').innerHTML=s.heroTitle;
+  document.getElementById('heroSub').textContent=s.heroSub;
+  document.getElementById('heroCta').textContent=s.heroCta;
+  document.getElementById('stat1Lbl').textContent=s.stat1;
+  document.getElementById('stat2Lbl').textContent=s.stat2;
+  document.getElementById('stat3Lbl').textContent=s.stat3;
+  document.getElementById('secLabel1').textContent=s.secLabel;
+  document.getElementById('secTitle1').textContent=s.secTitle;
+  document.getElementById('secSub1').textContent=s.secSub;
+  s.r.forEach((r,i)=>{
+    const t=document.getElementById('r'+(i+1)+'t');
+    const b=document.getElementById('r'+(i+1)+'b');
+    if(t) t.textContent=r.t;
+    if(b) b.innerHTML=r.b;
+  });
+  document.getElementById('gotraTitle').textContent=s.gotraTitle;
+  document.getElementById('gotraSub').textContent=s.gotraSub;
+  s.gi.forEach((g,i)=>{
+    const el=document.getElementById('gi'+(i+1));
+    if(el) el.innerHTML=g;
+  });
+  document.getElementById('quoteText').textContent=s.quote;
+  document.getElementById('quoteSrc').textContent=s.quoteSrc;
+  document.getElementById('ctaTitle').innerHTML=s.ctaTitle;
+  document.getElementById('ctaSub').textContent=s.ctaSub;
+  document.getElementById('ctaBtnLabel').textContent=s.ctaBtn;
+  document.getElementById('ctaNote').textContent=s.ctaNote;
+}
+
+render();
+</script>
+</body>
+</html>

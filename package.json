@@ -1,0 +1,8 @@
+{
+  "name": "vanshavali",
+  "version": "1.0.0",
+  "description": "Vanshavali — Indian Family Tree",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.0"
+  }
+}

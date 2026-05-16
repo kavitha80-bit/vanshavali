@@ -1,0 +1,3266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vanshavali — Your Family Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Telugu:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FBF5E9;--bg2:#F4EAD5;--bg3:#EDE0C4;
+  --surface:#FFFFFF;--surface2:#FDF8EF;
+  --border:#DFC99E;--border2:#C4A055;
+  --ink:#241406;--bark:#5A3310;--muted:#8C6B3E;--faint:#C8A870;
+  --gold:#B07A08;--gold2:#D09A18;--gold-dim:rgba(176,122,8,0.09);
+  --saffron:#C4781A;
+  --leaf:#2E6B20;--leaf2:#3E8A2C;--leaf-dim:rgba(46,107,32,0.09);
+  --terra:#A84818;--terra-dim:rgba(168,72,24,0.09);
+  --sky:#3A6E8A;--sky-dim:rgba(58,110,138,0.09);
+  --shadow:0 2px 10px rgba(80,48,8,0.09);
+  --shadow2:0 4px 20px rgba(80,48,8,0.14);
+  --r:8px;
+}
+html{background:var(--bg);min-height:100vh}
+body{
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  color:var(--ink);min-height:100vh;background:var(--bg);
+  background-image:
+    radial-gradient(ellipse at 8% 4%,rgba(176,122,8,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 94% 96%,rgba(46,107,32,0.05) 0%,transparent 50%);
+  overflow-x:hidden;
+}
+
+/* ═══ HEADER ═══ */
+header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  background:rgba(251,245,233,0.97);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:80;
+  box-shadow:0 1px 6px rgba(80,48,8,0.07);
+  display:flex;align-items:center;gap:12px;
+}
+.logo{font-family:'Yeseva One',serif;font-size:1.1rem;color:var(--gold)}
+#changeLangBtn{
+  margin-left:auto;font-size:11.5px;color:var(--gold);
+  font-weight:500;background:none;border:1px solid var(--border2);
+  padding:5px 12px;border-radius:4px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;display:none;
+}
+#changeLangBtn:hover{background:var(--gold-dim)}
+
+/* ═══ LANGUAGE PICKER SCREEN ═══ */
+#langScreen{
+  min-height:calc(100vh - 51px);
+  display:flex;align-items:center;justify-content:center;
+  padding:32px 20px;
+}
+.ls-wrap{width:100%;max-width:400px}
+
+.ls-top{text-align:center;margin-bottom:28px}
+.ls-icon{font-size:2.8rem;margin-bottom:12px}
+.ls-title{
+  font-family:'Yeseva One',serif;font-size:1.6rem;
+  color:var(--bark);margin-bottom:8px;line-height:1.2;
+}
+.ls-sub{font-size:13px;color:var(--muted);line-height:1.65}
+
+.ls-options{display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
+
+.lo{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 20px;background:var(--surface);
+  border:2px solid var(--border);border-radius:var(--r);
+  cursor:pointer;box-shadow:var(--shadow);
+  transition:all .2s;width:100%;text-align:left;
+  position:relative;overflow:hidden;
+}
+.lo::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:4px;transition:background .2s;
+}
+.lo.en::after{background:#4A8AAA}
+.lo.te::after{background:var(--saffron)}
+.lo.hi::after{background:var(--leaf2)}
+.lo:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+.lo.en:hover{border-color:#4A8AAA}
+.lo.te:hover{border-color:var(--saffron)}
+.lo.hi:hover{border-color:var(--leaf2)}
+.lo:active{transform:none;box-shadow:var(--shadow)}
+
+.lo-icon{
+  width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+.lo.en .lo-icon{background:#E8F2F8}
+.lo.te .lo-icon{background:#FFF0E0}
+.lo.hi .lo-icon{background:#EEF8EC}
+
+.lo-info{flex:1}
+.lo-name{
+  font-family:'Yeseva One',serif;font-size:1.05rem;
+  margin-bottom:3px;
+}
+.lo.en .lo-name{color:#2A4A5A}
+.lo.te .lo-name{color:#7A3A10}
+.lo.hi .lo-name{color:#2A5A20}
+.lo-desc{font-size:11.5px;color:var(--muted);line-height:1.4}
+.lo-arr{font-size:18px;color:var(--faint);flex-shrink:0;transition:transform .2s}
+.lo:hover .lo-arr{transform:translateX(4px)}
+
+.ls-note{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--gold2);border-radius:var(--r);
+  padding:14px 15px;display:flex;gap:11px;align-items:flex-start;
+  box-shadow:var(--shadow);
+}
+.ls-note-icon{font-size:1.3rem;flex-shrink:0}
+.ls-note-title{font-size:13px;font-weight:500;color:var(--bark);margin-bottom:3px}
+.ls-note-sub{font-size:11.5px;color:var(--muted);line-height:1.6}
+.ls-note-sub strong{color:var(--bark)}
+
+/* ═══ FORM SCREEN ═══ */
+#formScreen{display:none}
+
+.prog-bar{height:3px;background:var(--bg2);position:sticky;top:51px;z-index:70}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--saffron),var(--leaf2));transition:width .5s ease;width:3%}
+
+.fmain{max-width:580px;margin:0 auto;padding:22px 18px 150px}
+
+/* Welcome */
+.welcome{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:4px solid var(--gold2);border-radius:var(--r);
+  padding:18px 16px;margin-bottom:26px;
+  box-shadow:var(--shadow);display:flex;gap:13px;
+}
+.wico{font-size:1.9rem;flex-shrink:0;line-height:1;margin-top:2px}
+.wtitle{font-family:'Yeseva One',serif;font-size:1.05rem;color:var(--bark);margin-bottom:5px}
+.wbody{font-size:13px;color:var(--muted);line-height:1.7}
+.wbody strong{color:var(--bark)}
+.wbody em{color:var(--gold);font-style:normal;font-weight:500}
+
+/* Section heading */
+.sh{display:flex;align-items:center;gap:10px;margin:28px 0 12px}
+.sh-dot{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--gold-dim);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;flex-shrink:0;
+}
+.sh-t{font-family:'Yeseva One',serif;font-size:.95rem;color:var(--bark)}
+.sh-s{font-size:11px;color:var(--muted);margin-top:1px}
+.sh-opt{
+  margin-left:auto;font-size:10px;color:var(--muted);
+  background:var(--bg2);border:1px solid var(--border);
+  padding:2px 8px;border-radius:100px;flex-shrink:0;
+}
+
+/* Person card */
+.pc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:9px;
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.pc.filled{border-color:rgba(176,122,8,0.38)}
+.pc.you-card{border:1.5px solid var(--gold2)}
+.pc:hover{box-shadow:var(--shadow2)}
+
+.pc-h{
+  padding:12px 14px;display:flex;align-items:center;gap:9px;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  cursor:pointer;user-select:none;transition:background .15s;
+}
+.pc-h:hover{background:var(--bg3)}
+
+.bdg{
+  font-size:9px;font-weight:600;letter-spacing:1.2px;
+  text-transform:uppercase;padding:2px 8px;border-radius:3px;flex-shrink:0;
+}
+.b-you{color:var(--terra);background:var(--terra-dim);border:1px solid rgba(168,72,24,0.22)}
+.b-g{color:var(--gold);background:var(--gold-dim);border:1px solid rgba(176,122,8,0.22)}
+.b-l{color:var(--leaf);background:var(--leaf-dim);border:1px solid rgba(46,107,32,0.22)}
+.b-s{color:var(--sky);background:var(--sky-dim);border:1px solid rgba(58,110,138,0.22)}
+
+.pcn{font-size:13.5px;font-weight:500;color:var(--bark);flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcn.empty{color:var(--faint);font-weight:300}
+.pctick{font-size:12px;color:var(--leaf2);display:none}
+.pcarr{font-size:10px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.pc.open .pcarr{transform:rotate(180deg)}
+
+.pf{
+  padding:15px 14px;
+  display:grid;grid-template-columns:1fr 1fr;gap:11px;
+  background:var(--surface);
+}
+.pc:not(.open) .pf{display:none}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg.full{grid-column:1/-1}
+.fl{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.2px}
+
+input.fi,select.fi,textarea.fi{
+  padding:9px 11px;border:1px solid var(--border);border-radius:6px;
+  background:white;color:var(--ink);
+  font-family:'DM Sans',sans-serif;font-size:13.5px;
+  outline:none;width:100%;
+  transition:border-color .2s,box-shadow .2s;
+}
+input.fi:focus,select.fi:focus,textarea.fi:focus{
+  border-color:var(--gold2);box-shadow:0 0 0 3px rgba(176,122,8,0.1);
+}
+input.fi::placeholder,textarea.fi::placeholder{color:#C8A870}
+textarea.fi{resize:none;height:50px;font-size:12.5px}
+select.fi{cursor:pointer}
+
+.nkprev{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,#FFFBEF,#FFF4D0);
+  border:1px solid rgba(176,122,8,0.28);border-radius:6px;
+  padding:9px 13px;display:flex;align-items:center;gap:9px;
+  animation:fadeUp .3s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.nkstar{font-size:1.2rem}
+.nknm{font-size:13px;font-weight:500;color:var(--bark)}
+.nkdt{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* Add buttons */
+.add-btn{
+  width:100%;padding:12px 16px;
+  border:1.5px dashed var(--border2);border-radius:var(--r);
+  background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);
+  transition:all .2s;margin-bottom:9px;
+}
+.add-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.add-btn span.plus{font-size:1.1rem;color:inherit}
+
+/* Submit */
+.submit-box{
+  background:linear-gradient(135deg,var(--surface),#FFF8E8);
+  border:1.5px solid var(--border2);border-radius:12px;
+  padding:22px 20px;text-align:center;margin-top:10px;
+  box-shadow:var(--shadow2);
+}
+.sub-title{font-family:'Yeseva One',serif;font-size:1.15rem;color:var(--bark);margin-bottom:5px}
+.sub-desc{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.sub-btn{
+  width:100%;padding:14px;border:none;border-radius:var(--r);
+  background:linear-gradient(135deg,var(--gold),var(--saffron));
+  color:white;font-family:'Yeseva One',serif;font-size:1rem;
+  cursor:pointer;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 3px 14px rgba(176,122,8,0.38);transition:all .2s;
+}
+.sub-btn:hover{box-shadow:0 5px 22px rgba(176,122,8,0.48);transform:translateY(-1px)}
+.sub-note{font-size:12px;color:var(--muted);margin-top:11px}
+.sub-note strong{font-family:'Yeseva One',serif;font-size:14px;color:var(--leaf2)}
+
+/* Sticky bar */
+.sticky{
+  position:fixed;bottom:0;left:0;right:0;z-index:70;
+  background:rgba(251,245,233,0.97);border-top:1px solid var(--border);
+  padding:11px 18px;backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 -3px 16px rgba(80,48,8,0.09);
+}
+.sticky-info{flex:1}
+.scount{font-size:12px;color:var(--muted)}
+.scount strong{font-family:'Yeseva One',serif;font-size:15px;color:var(--bark)}
+.sbtn{
+  padding:11px 22px;border:none;border-radius:7px;
+  background:linear-gradient(135deg,var(--gold),var(--saffron));
+  color:white;font-family:'Yeseva One',serif;font-size:.88rem;
+  cursor:pointer;box-shadow:0 2px 8px rgba(176,122,8,0.3);
+  transition:all .2s;flex-shrink:0;
+}
+.sbtn:hover{box-shadow:0 4px 14px rgba(176,122,8,0.42);transform:translateY(-1px)}
+
+/* ═══ VANSHA VRUKSHAM REVEAL ═══ */
+#reveal{
+  display:none;position:fixed;inset:0;z-index:100;
+  flex-direction:column;background:var(--bg);overflow:hidden;
+}
+#reveal.show{display:flex}
+
+.rv-head{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:rgba(251,245,233,0.98);backdrop-filter:blur(10px);
+  box-shadow:0 2px 8px rgba(80,48,8,0.08);
+  min-height:56px;
+}
+.rv-t{font-family:'Yeseva One',serif;font-size:1.05rem;color:var(--bark)}
+.rv-s{font-size:11px;color:var(--muted);margin-top:2px}
+.rv-share{
+  margin-left:auto;padding:7px 14px;
+  background:var(--gold-dim);border:1px solid var(--border2);
+  color:var(--gold);border-radius:6px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;
+}
+.rv-share:hover{background:rgba(176,122,8,0.16)}
+
+#tree-canvas{
+  flex:1;overflow:auto;background:var(--bg);
+  background-image:radial-gradient(ellipse at 50% 40%,rgba(176,122,8,0.04) 0%,transparent 60%);
+}
+#tsvg{display:block}
+
+.rv-foot{
+  padding:11px 14px;border-top:1px solid var(--border);
+  display:flex;gap:8px;flex-shrink:0;
+  background:rgba(251,245,233,0.98);
+}
+.rfb{
+  flex:1;padding:11px 6px;border:1px solid var(--border);
+  background:transparent;color:var(--bark);border-radius:7px;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.rfb:hover{background:var(--bg2);border-color:var(--border2)}
+.rfb.prime{
+  background:linear-gradient(135deg,var(--gold),var(--saffron));
+  color:white;border-color:transparent;
+  box-shadow:0 2px 8px rgba(176,122,8,0.3);
+}
+.rfb.prime:hover{box-shadow:0 4px 14px rgba(176,122,8,0.42);transform:translateY(-1px)}
+
+/* Confetti */
+@keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(540deg);opacity:0}}
+.cp{position:absolute;top:-8px;pointer-events:none;animation:fall 3s ease-in forwards;border-radius:2px}
+
+/* Tree node anim */
+@keyframes nodeIn{from{opacity:0;transform:scale(.82) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes starPulse{0%,100%{opacity:.35}50%{opacity:.85}}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--bark);color:white;
+  padding:9px 18px;border-radius:7px;font-size:12.5px;
+  opacity:0;transition:all .25s;pointer-events:none;z-index:200;white-space:nowrap;
+  box-shadow:var(--shadow2);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:440px){
+  .pf{grid-template-columns:1fr}
+  .fg.full{grid-column:auto}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌳 Vanshavali</div>
+  <button id="changeLangBtn" onclick="showLangScreen()">🌐 Change Language</button>
+</header>
+
+<!-- ═══════════ LANGUAGE PICKER ═══════════ -->
+<div id="langScreen">
+  <div class="ls-wrap">
+    <div class="ls-top">
+      <div class="ls-icon">🌳</div>
+      <div class="ls-title">Vanshavali<br>Family Tree</div>
+      <div class="ls-sub">Choose the language you are most comfortable with</div>
+    </div>
+
+    <div class="ls-options">
+      <button class="lo en" onclick="chooseLang('en')">
+        <div class="lo-icon">🇬🇧</div>
+        <div class="lo-info">
+          <div class="lo-name">English</div>
+          <div class="lo-desc">Fill your family details in English</div>
+        </div>
+        <div class="lo-arr">›</div>
+      </button>
+
+      <button class="lo te" onclick="chooseLang('te')">
+        <div class="lo-icon">🌺</div>
+        <div class="lo-info">
+          <div class="lo-name">తెలుగు</div>
+          <div class="lo-desc">తెలుగులో మీ కుటుంబ వివరాలు నమోదు చేయండి</div>
+        </div>
+        <div class="lo-arr">›</div>
+      </button>
+
+      <button class="lo hi" onclick="chooseLang('hi')">
+        <div class="lo-icon">🇮🇳</div>
+        <div class="lo-info">
+          <div class="lo-name">हिंदी</div>
+          <div class="lo-desc">हिंदी में अपने परिवार की जानकारी भरें</div>
+        </div>
+        <div class="lo-arr">›</div>
+      </button>
+    </div>
+
+    <div class="ls-note">
+      <div class="ls-note-icon">🙏</div>
+      <div>
+        <div class="ls-note-title" id="lsNoteTitle">You've been invited!</div>
+        <div class="ls-note-sub" id="lsNoteSub"><strong>Suresh</strong> has added you to the family tree. Fill in what you know — your details, parents, grandparents, siblings and children.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FORM SCREEN ═══════════ -->
+<div id="formScreen">
+  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+
+  <div class="fmain">
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div class="wico">🙏</div>
+      <div>
+        <div class="wtitle" id="wTitle">Welcome, Ramesh!</div>
+        <div class="wbody" id="wBody"></div>
+      </div>
+    </div>
+
+    <!-- ── YOU ── -->
+    <div class="sh">
+      <div class="sh-dot">👤</div>
+      <div><div class="sh-t" id="shYou">You</div><div class="sh-s" id="shYouS"></div></div>
+    </div>
+    <div class="pc you-card open" id="pc-you">
+      <div class="pc-h" onclick="tog('you')">
+        <span class="bdg b-you" id="b-you">YOU</span>
+        <span class="pcn empty" id="n-you" data-ph="Your full name">Your full name</span>
+        <span class="pctick" id="t-you">✓</span>
+        <span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-you">
+        <div class="fg full"><div class="fl" id="lName">Full name</div>
+          <input class="fi" type="text" id="you-name" placeholder="e.g. Ramesh Sharma" oninput="onNm('you')"></div>
+        <div class="fg"><div class="fl" id="lDob">Birth year</div>
+          <input class="fi" type="text" maxlength="4" id="you-dob" placeholder="1952" oninput="onF()"></div>
+        <div class="fg"><div class="fl" id="lCity">Birth city / village</div>
+          <input class="fi" type="text" id="you-city" placeholder="Hyderabad" oninput="onF()"></div>
+        <div class="fg"><div class="fl" id="lGotra">Gotra</div>
+          <input class="fi" type="text" id="you-gotra" placeholder="Bharadwaj" oninput="onF()"></div>
+        <div class="fg"><div class="fl" id="lNaksh">Nakshatra (if known)</div>
+          <input class="fi" type="text" id="you-naksh" placeholder="Rohini" oninput="onNk('you')"></div>
+        <div id="nk-you" class="nkprev" style="display:none">
+          <span class="nkstar">🌟</span>
+          <div><div class="nknm" id="nkn-you"></div><div class="nkdt" id="nkd-you"></div></div>
+        </div>
+        <div class="fg full"><div class="fl" id="lNotes">Notes (profession, nickname, village…)</div>
+          <textarea class="fi" id="you-notes" placeholder="e.g. Retired teacher from Karimnagar…" oninput="onF()"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ── SPOUSE ── -->
+    <div class="pc" id="pc-spouse">
+      <div class="pc-h" onclick="tog('spouse')">
+        <span class="bdg b-g" id="b-spouse">SPOUSE</span>
+        <span class="pcn empty" id="n-spouse" data-ph="Spouse's name (optional)">Spouse's name (optional)</span>
+        <span class="pctick" id="t-spouse">✓</span>
+        <span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-spouse" style="display:none">
+        <div class="fg full"><div class="fl" id="lSpName">Full name</div>
+          <input class="fi" type="text" id="spouse-name" placeholder="e.g. Rama Devi" oninput="onNm('spouse')"></div>
+        <div class="fg"><div class="fl" id="lSpDob">Birth year</div>
+          <input class="fi" type="text" maxlength="4" id="spouse-dob" placeholder="1955" oninput="onF()"></div>
+        <div class="fg"><div class="fl" id="lSpCity">Birth city</div>
+          <input class="fi" type="text" id="spouse-city" placeholder="Warangal" oninput="onF()"></div>
+        <div class="fg"><div class="fl" id="lSpGotra">Gotra / Nakshatra</div>
+          <input class="fi" type="text" id="spouse-gotra" placeholder="Kaushik / Ashwini" oninput="onF()"></div>
+      </div>
+    </div>
+
+    <!-- ── SIBLINGS ── -->
+    <div class="sh">
+      <div class="sh-dot">👫</div>
+      <div><div class="sh-t" id="shSib">Brothers & Sisters</div>
+        <div class="sh-s" id="shSibS">Add as many as you know</div></div>
+      <span class="sh-opt" id="shOptSib">Optional</span>
+    </div>
+    <div id="sib-list"></div>
+    <button class="add-btn" id="addSibBtn" onclick="addSibling()">
+      <span class="plus">＋</span><span id="lblAddSib">Add a brother or sister</span>
+    </button>
+
+    <!-- ── PARENTS ── -->
+    <div class="sh">
+      <div class="sh-dot">👨‍👩‍👦</div>
+      <div><div class="sh-t" id="shPar">Your Parents</div>
+        <div class="sh-s" id="shParS">Add both if you know them</div></div>
+      <span class="sh-opt" id="shOptPar">Optional</span>
+    </div>
+
+    <div class="pc" id="pc-father">
+      <div class="pc-h" onclick="tog('father')">
+        <span class="bdg b-l" id="b-father">FATHER</span>
+        <span class="pcn empty" id="n-father" data-ph="Father's name">Father's name</span>
+        <span class="pctick" id="t-father">✓</span>
+        <span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-father" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="father-name" placeholder="e.g. Govind Rao" oninput="onNm('father')"></div>
+        <div class="fg"><div class="fl">Birth year</div>
+          <input class="fi" type="text" maxlength="4" id="father-dob" placeholder="1925" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Birth city / village</div>
+          <input class="fi" type="text" id="father-city" placeholder="Nalgonda" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Gotra</div>
+          <input class="fi" type="text" id="father-gotra" placeholder="Bharadwaj" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Nakshatra</div>
+          <input class="fi" type="text" id="father-naksh" placeholder="Hasta" oninput="onNk('father')"></div>
+        <div id="nk-father" class="nkprev" style="display:none">
+          <span class="nkstar">🌟</span>
+          <div><div class="nknm" id="nkn-father"></div><div class="nkdt" id="nkd-father"></div></div>
+        </div>
+        <div class="fg full"><div class="fl">Notes</div>
+          <textarea class="fi" id="father-notes" placeholder="Any details you remember…" oninput="onF()"></textarea></div>
+      </div>
+    </div>
+
+    <div class="pc" id="pc-mother">
+      <div class="pc-h" onclick="tog('mother')">
+        <span class="bdg b-l" id="b-mother">MOTHER</span>
+        <span class="pcn empty" id="n-mother" data-ph="Mother's name">Mother's name</span>
+        <span class="pctick" id="t-mother">✓</span>
+        <span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-mother" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="mother-name" placeholder="e.g. Saraswathi Devi" oninput="onNm('mother')"></div>
+        <div class="fg"><div class="fl">Birth year</div>
+          <input class="fi" type="text" maxlength="4" id="mother-dob" placeholder="1928" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Birth city</div>
+          <input class="fi" type="text" id="mother-city" placeholder="Suryapet" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Nakshatra</div>
+          <input class="fi" type="text" id="mother-naksh" placeholder="Pushya" oninput="onNk('mother')"></div>
+        <div id="nk-mother" class="nkprev" style="display:none">
+          <span class="nkstar">🌟</span>
+          <div><div class="nknm" id="nkn-mother"></div><div class="nkdt" id="nkd-mother"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GRANDPARENTS ── -->
+    <div class="sh">
+      <div class="sh-dot">👴</div>
+      <div><div class="sh-t" id="shGp">Grandparents</div>
+        <div class="sh-s" id="shGpS">Even one name is precious</div></div>
+      <span class="sh-opt" id="shOptGp">Optional</span>
+    </div>
+
+    <div class="pc" id="pc-dadaji">
+      <div class="pc-h" onclick="tog('dadaji')">
+        <span class="bdg b-g" id="b-dadaji">PAT. GRANDFATHER</span>
+        <span class="pcn empty" id="n-dadaji" data-ph="Paternal grandfather">Paternal grandfather</span>
+        <span class="pctick" id="t-dadaji">✓</span><span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-dadaji" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="dadaji-name" placeholder="e.g. Venkat Rao" oninput="onNm('dadaji')"></div>
+        <div class="fg"><div class="fl">Birth year (approx)</div>
+          <input class="fi" type="text" maxlength="4" id="dadaji-dob" placeholder="1895" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Village / Town</div>
+          <input class="fi" type="text" id="dadaji-city" placeholder="Miryalaguda" oninput="onF()"></div>
+        <div class="fg full"><div class="fl">Notes</div>
+          <textarea class="fi" id="dadaji-notes" placeholder="Occupation, stories, anything you recall…" oninput="onF()"></textarea></div>
+      </div>
+    </div>
+
+    <div class="pc" id="pc-dadiji">
+      <div class="pc-h" onclick="tog('dadiji')">
+        <span class="bdg b-g" id="b-dadiji">PAT. GRANDMOTHER</span>
+        <span class="pcn empty" id="n-dadiji" data-ph="Paternal grandmother">Paternal grandmother</span>
+        <span class="pctick" id="t-dadiji">✓</span><span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-dadiji" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="dadiji-name" placeholder="e.g. Lakshmi Bai" oninput="onNm('dadiji')"></div>
+        <div class="fg"><div class="fl">Birth year (approx)</div>
+          <input class="fi" type="text" maxlength="4" id="dadiji-dob" placeholder="1900" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Village / Town</div>
+          <input class="fi" type="text" id="dadiji-city" placeholder="" oninput="onF()"></div>
+      </div>
+    </div>
+
+    <div class="pc" id="pc-nanaji">
+      <div class="pc-h" onclick="tog('nanaji')">
+        <span class="bdg b-g" id="b-nanaji">MAT. GRANDFATHER</span>
+        <span class="pcn empty" id="n-nanaji" data-ph="Maternal grandfather">Maternal grandfather</span>
+        <span class="pctick" id="t-nanaji">✓</span><span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-nanaji" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="nanaji-name" placeholder="e.g. Krishna Murthy" oninput="onNm('nanaji')"></div>
+        <div class="fg"><div class="fl">Birth year (approx)</div>
+          <input class="fi" type="text" maxlength="4" id="nanaji-dob" placeholder="1898" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Village / Town</div>
+          <input class="fi" type="text" id="nanaji-city" placeholder="Guntur" oninput="onF()"></div>
+      </div>
+    </div>
+
+    <div class="pc" id="pc-naniji">
+      <div class="pc-h" onclick="tog('naniji')">
+        <span class="bdg b-g" id="b-naniji">MAT. GRANDMOTHER</span>
+        <span class="pcn empty" id="n-naniji" data-ph="Maternal grandmother">Maternal grandmother</span>
+        <span class="pctick" id="t-naniji">✓</span><span class="pcarr">▾</span>
+      </div>
+      <div class="pf" id="f-naniji" style="display:none">
+        <div class="fg full"><div class="fl">Full name</div>
+          <input class="fi" type="text" id="naniji-name" placeholder="e.g. Padmavathi" oninput="onNm('naniji')"></div>
+        <div class="fg"><div class="fl">Birth year (approx)</div>
+          <input class="fi" type="text" maxlength="4" id="naniji-dob" placeholder="1902" oninput="onF()"></div>
+        <div class="fg"><div class="fl">Village / Town</div>
+          <input class="fi" type="text" id="naniji-city" placeholder="Vijayawada" oninput="onF()"></div>
+      </div>
+    </div>
+
+    <!-- ── CHILDREN ── -->
+    <div class="sh">
+      <div class="sh-dot">👶</div>
+      <div><div class="sh-t" id="shKids">Your Children</div>
+        <div class="sh-s" id="shKidsS">Add them to the tree</div></div>
+      <span class="sh-opt" id="shOptKids">Optional</span>
+    </div>
+    <div id="kids-list"></div>
+    <button class="add-btn" id="addKidBtn" onclick="addKid()">
+      <span class="plus">＋</span><span id="lblAddKid">Add a child</span>
+    </button>
+
+    <!-- Submit -->
+    <div class="submit-box">
+      <div class="sub-title" id="subTitle">🌳 See Your Vansha Vruksham</div>
+      <div class="sub-desc" id="subDesc">Everything you've filled in will bloom into a beautiful family tree. Add as little or as much as you know.</div>
+      <button class="sub-btn" onclick="showReveal()">
+        <span>✨</span><span id="subLabel">Show My Family Tree</span>
+      </button>
+      <div class="sub-note">You've added <strong id="filledN">0</strong> <span id="filledW">people</span></div>
+    </div>
+
+  </div><!-- /fmain -->
+</div><!-- /formScreen -->
+
+<!-- Sticky bar -->
+<div class="sticky" id="stickyBar" style="display:none">
+  <div class="sticky-info">
+    <div class="scount"><strong id="sNum">0</strong> <span id="sWord">people added</span></div>
+  </div>
+  <button class="sbtn" onclick="showReveal()">🌳 <span id="sBtnLbl">See Tree</span></button>
+</div>
+
+<!-- ═══════════ REVEAL ═══════════ -->
+<div id="reveal">
+  <div class="rv-head">
+    <div>
+      <div class="rv-t" id="rvT">🌳 Your Vansha Vruksham</div>
+      <div class="rv-s" id="rvS">This tree grows as more family members join</div>
+    </div>
+    <button class="rv-share" onclick="shareTree()">📱 <span id="rvShareLbl">Share</span></button>
+  </div>
+  <div id="tree-canvas">
+    <div id="treeWrap" style="position:relative;padding:30px 30px 50px;display:inline-block;min-width:100%;min-height:100%">
+      <div id="treeTitle" style="text-align:center;font-family:'Yeseva One',serif;font-size:1rem;color:#5A3310;margin-bottom:24px"></div>
+      <svg id="linesSvg" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;width:100%;height:100%"></svg>
+    </div>
+  </div>
+  <div class="rv-foot-new">
+    <button class="rvb" onclick="closeReveal()">
+      <span class="rb-icon">✏️</span>
+      <span class="rb-label">Edit</span>
+    </button>
+    <button class="rvb" onclick="openRootPanel()">
+      <span class="rb-icon">👤</span>
+      <span class="rb-label">Switch</span>
+    </button>
+    <button class="rvb" onclick="openFindPanel()">
+      <span class="rb-icon">🔍</span>
+      <span class="rb-label">Find</span>
+    </button>
+    <button class="rvb" onclick="exportTree()">
+      <span class="rb-icon">💾</span>
+      <span class="rb-label">Backup</span>
+    </button>
+    <button class="rvb" onclick="downloadPDF()" id="pdfBtn">
+      <span class="rb-icon">📄</span>
+      <span class="rb-label">PDF</span>
+    </button>
+    <button class="rvb primary" onclick="shareTree()">
+      <span class="rb-icon">📱</span>
+      <span class="rb-label">Share</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── ADD FAMILY SHEET (for reveal tree) ── -->
+<!-- ══════════ PANEL CSS ══════════ -->
+<style>
+/* Shared panel backdrop */
+.panel-backdrop{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(36,20,6,0.45);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+.panel-backdrop.open{display:flex}
+
+/* Shared panel card */
+.panel-card{
+  background:#FBF5E9;
+  border-radius:20px 20px 0 0;
+  width:100%;max-width:560px;
+  max-height:80vh;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 -8px 40px rgba(80,48,8,0.2);
+  animation:slideUp .28s cubic-bezier(.2,.8,.3,1);
+  position:relative;z-index:301;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* Panel handle */
+.panel-handle{
+  width:40px;height:4px;background:#DFC99E;
+  border-radius:2px;margin:12px auto 0;flex-shrink:0;
+}
+
+/* Panel header */
+.panel-header{
+  padding:14px 20px 13px;
+  border-bottom:1px solid #DFC99E;
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;background:#FBF5E9;
+}
+.panel-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.panel-icon.gold{background:rgba(176,122,8,0.12)}
+.panel-icon.sky{background:rgba(58,110,138,0.12)}
+.panel-title{font-family:'Yeseva One',serif;font-size:1rem;color:#5A3310}
+.panel-sub{font-size:11.5px;color:#8C6B3E;margin-top:2px}
+.panel-close{
+  margin-left:auto;width:28px;height:28px;border-radius:50%;
+  background:#EDE0C4;border:none;cursor:pointer;
+  font-size:14px;color:#8C6B3E;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all .15s;
+}
+.panel-close:hover{background:#DFC99E;color:#5A3310}
+
+/* ── ROOT SWITCHER ── */
+.rp-search-wrap{
+  padding:12px 16px 8px;flex-shrink:0;
+  background:#FBF5E9;border-bottom:1px solid #F4EAD5;
+}
+.rp-search{
+  width:100%;padding:9px 12px 9px 36px;
+  border:1.5px solid #DFC99E;border-radius:8px;
+  background:white;font-family:'DM Sans',sans-serif;
+  font-size:13px;outline:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C8A870' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:10px center;
+}
+.rp-search:focus{border-color:#C4A055}
+.rp-list{overflow-y:auto;padding:8px 12px 20px;flex:1}
+.rp-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 13px;border-radius:10px;
+  cursor:pointer;transition:all .15s;margin-bottom:4px;
+  border:1.5px solid transparent;
+}
+.rp-item:hover{background:rgba(176,122,8,0.07);border-color:rgba(176,122,8,0.2)}
+.rp-item.active{
+  background:rgba(176,122,8,0.1);border-color:#C4A055;
+}
+.rp-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#F4EAD5,#EDE0C4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Yeseva One',serif;font-size:.85rem;color:#5A3310;
+  flex-shrink:0;border:1.5px solid #DFC99E;
+}
+.rp-item.active .rp-avatar{background:linear-gradient(135deg,#C4A055,#D09A18);color:white;border-color:transparent}
+.rp-name{font-size:13.5px;font-weight:500;color:#3A2010;margin-bottom:2px}
+.rp-role-tag{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#8C6B3E}
+.rp-item.active .rp-role-tag{color:#B07A08}
+.rp-check{margin-left:auto;font-size:16px;color:#B07A08;flex-shrink:0}
+.rp-empty{text-align:center;padding:24px;font-size:13px;color:#C8A870}
+
+/* ── RELATION FINDER ── */
+.fp-body{padding:18px 18px 24px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px}
+
+/* Custom dropdown */
+.fp-dropdown-wrap{position:relative}
+.fp-dropdown-label{font-size:10.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#8C6B3E;margin-bottom:6px}
+.fp-dropdown{
+  width:100%;padding:11px 38px 11px 14px;
+  border:1.5px solid #DFC99E;border-radius:10px;
+  background:white;font-family:'DM Sans',sans-serif;
+  font-size:13.5px;color:#3A2010;outline:none;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C8A870' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  transition:border-color .2s,box-shadow .2s;
+}
+.fp-dropdown:focus{border-color:#C4A055;box-shadow:0 0 0 3px rgba(176,122,8,0.1)}
+.fp-dropdown option{font-size:13px;color:#3A2010;padding:6px}
+
+/* Connector arrow */
+.fp-connector{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;position:relative;
+}
+.fp-connector::before,.fp-connector::after{
+  content:'';flex:1;height:1.5px;background:#DFC99E;
+}
+.fp-connector-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#F4EAD5,#EDE0C4);
+  border:1.5px solid #DFC99E;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:#8C6B3E;flex-shrink:0;margin:0 10px;
+}
+
+/* Find button */
+.fp-find-btn{
+  width:100%;padding:13px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,#B07A08,#C4781A);
+  color:white;font-family:'Yeseva One',serif;font-size:.95rem;
+  cursor:pointer;letter-spacing:.3px;
+  box-shadow:0 3px 12px rgba(176,122,8,0.35);
+  transition:all .2s;
+}
+.fp-find-btn:hover{box-shadow:0 5px 18px rgba(176,122,8,0.45);transform:translateY(-1px)}
+.fp-find-btn:active{transform:translateY(0)}
+
+/* Result card */
+.fp-result-card{
+  background:white;border:1.5px solid #DFC99E;
+  border-radius:12px;overflow:hidden;display:none;
+}
+.fp-result-card.show{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fp-result-top{
+  background:linear-gradient(135deg,#FBF5E9,#F4EAD5);
+  padding:14px 16px;border-bottom:1px solid #DFC99E;
+  display:flex;align-items:center;gap:12px;
+}
+.fp-result-icon{font-size:1.6rem}
+.fp-result-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8C6B3E;margin-bottom:3px}
+.fp-result-rel{font-family:'Yeseva One',serif;font-size:1.1rem;color:#5A3310}
+.fp-path-section{padding:12px 16px}
+.fp-path-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#C8A870;margin-bottom:8px}
+.fp-path-step{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:5px 0;border-bottom:1px solid #F4EAD5;font-size:12.5px;color:#5A3310;
+}
+.fp-path-step:last-child{border-bottom:none}
+.fp-step-dot{width:8px;height:8px;border-radius:50%;background:#C4A055;flex-shrink:0;margin-top:5px}
+.fp-step-rel{color:#8C6B3E;font-style:italic;margin:0 4px}
+.fp-no-path{
+  text-align:center;padding:20px;font-size:13px;color:#8C6B3E;
+  background:rgba(168,72,24,0.05);border:1px solid rgba(168,72,24,0.15);
+  border-radius:10px;display:none;
+}
+.fp-no-path.show{display:block}
+.fp-no-path.show{display:block}
+
+/* Revised footer */
+.rv-foot-new{
+  padding:10px 12px 14px;
+  border-top:1px solid #DFC99E;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  gap:7px;
+  flex-shrink:0;
+  background:rgba(251,245,233,0.98);
+  backdrop-filter:blur(8px);
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.rv-foot-new::-webkit-scrollbar{display:none}
+.rvb{
+  flex:0 0 auto;
+  min-width:64px;
+  padding:10px 12px;
+  border:1.5px solid #DFC99E;
+  background:white;
+  color:#5A3310;
+  border-radius:12px;
+  font-family:'DM Sans',sans-serif;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .18s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  white-space:nowrap;
+  letter-spacing:0.2px;
+  box-shadow:0 1px 4px rgba(80,48,8,0.08);
+}
+.rvb .rb-icon{font-size:1.2rem;line-height:1}
+.rvb .rb-label{font-size:10px;font-weight:600;letter-spacing:0.3px}
+.rvb:active{transform:scale(0.95);background:#F4EAD5}
+.rvb.primary{
+  background:linear-gradient(135deg,#B07A08,#C4781A);
+  color:white;
+  border-color:transparent;
+  box-shadow:0 3px 10px rgba(176,122,8,0.35);
+  min-width:80px;
+}
+.rvb.primary:active{transform:scale(0.95)}
+.rvb.danger{
+  border-color:rgba(168,72,24,0.3);
+  color:#A84818;
+}
+.rvb.danger:active{background:rgba(168,72,24,0.08)}
+</style>
+
+<!-- ══════════ ROOT SWITCHER PANEL ══════════ -->
+<div id="rootPanel" class="panel-backdrop" onclick="closeRootPanel()">
+  <div class="panel-card" onclick="event.stopPropagation()">
+    <div class="panel-handle"></div>
+    <div class="panel-header">
+      <div class="panel-icon gold">🌳</div>
+      <div>
+        <div class="panel-title">Change Primary Person</div>
+        <div class="panel-sub">All roles and labels update instantly</div>
+      </div>
+      <button class="panel-close" onclick="closeRootPanel()">✕</button>
+    </div>
+    <div class="rp-search-wrap">
+      <input class="rp-search" type="text" id="rpSearch" placeholder="Search by name…" oninput="filterRpList(this.value)">
+    </div>
+    <div class="rp-list" id="rpList"></div>
+  </div>
+</div>
+
+<!-- ══════════ RELATION FINDER PANEL ══════════ -->
+<div id="findPanel" class="panel-backdrop" onclick="closeFindPanel()">
+  <div class="panel-card" onclick="event.stopPropagation()">
+    <div class="panel-handle"></div>
+    <div class="panel-header">
+      <div class="panel-icon sky">🔍</div>
+      <div>
+        <div class="panel-title">Find Relationship</div>
+        <div class="panel-sub">Select two people to discover how they are related</div>
+      </div>
+      <button class="panel-close" onclick="closeFindPanel()">✕</button>
+    </div>
+    <div class="fp-body">
+      <div>
+        <div class="fp-dropdown-label">From</div>
+        <div class="fp-dropdown-wrap">
+          <select class="fp-dropdown" id="fpFrom" onchange="clearFpResult()">
+            <option value="">Choose a person…</option>
+          </select>
+        </div>
+      </div>
+      <div class="fp-connector">
+        <div class="fp-connector-icon">↔</div>
+      </div>
+      <div>
+        <div class="fp-dropdown-label">To</div>
+        <div class="fp-dropdown-wrap">
+          <select class="fp-dropdown" id="fpTo" onchange="clearFpResult()">
+            <option value="">Choose a person…</option>
+          </select>
+        </div>
+      </div>
+      <button class="fp-find-btn" onclick="findRelation()">🔍 Find Relationship</button>
+      <div class="fp-result-card" id="fpResult">
+        <div class="fp-result-top">
+          <div class="fp-result-icon">🌳</div>
+          <div>
+            <div class="fp-result-label">They are</div>
+            <div class="fp-result-rel" id="fpRelLabel"></div>
+          </div>
+        </div>
+        <div class="fp-path-section">
+          <div class="fp-path-title">Connection path</div>
+          <div id="fpPath"></div>
+        </div>
+      </div>
+      <div class="fp-no-path" id="fpNoPath">
+        😕 No connection found between these two people yet. Add more family members to connect them.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="sheetBg" style="position:fixed;inset:0;z-index:200;background:rgba(36,20,6,0.35);display:none;backdrop-filter:blur(3px)" onclick="closeSheet()"></div>
+<div id="sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:201;background:white;border-radius:16px 16px 0 0;box-shadow:0 -4px 32px rgba(80,48,8,0.18);max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.3,1)">
+  <div style="width:38px;height:4px;background:#DFC99E;border-radius:2px;margin:11px auto 0"></div>
+  <div style="padding:13px 17px 10px;border-bottom:1px solid #DFC99E;display:flex;align-items:center;gap:10px">
+    <div>
+      <div id="shTitle" style="font-family:'Yeseva One',serif;font-size:.95rem;color:#5A3310">Add family</div>
+      <div id="shSub" style="font-size:11.5px;color:#8C6B3E;margin-top:2px"></div>
+    </div>
+    <button onclick="closeSheet()" style="margin-left:auto;width:26px;height:26px;border-radius:50%;background:#F4EAD5;border:none;cursor:pointer;font-size:13px;color:#8C6B3E">✕</button>
+  </div>
+  <div style="padding:13px 17px 24px">
+    <div id="relPicker"></div>
+    <div id="addForm" style="display:none;background:#F4EAD5;border:1px solid #DFC99E;border-radius:8px;padding:13px;margin-top:4px">
+      <div id="afTitle" style="font-family:'Yeseva One',serif;font-size:.9rem;color:#5A3310;margin-bottom:10px">Add person</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10.5px;color:#8C6B3E;font-weight:500">Full name</div>
+          <input id="af-name" type="text" placeholder="Name" onkeydown="if(event.key==='Enter')rv_savePerson()" style="padding:8px 10px;border:1px solid #DFC99E;border-radius:6px;background:white;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10.5px;color:#8C6B3E;font-weight:500">Birth year</div>
+          <input id="af-dob" type="text" maxlength="4" placeholder="1960" onkeydown="if(event.key==='Enter')rv_savePerson()" style="padding:8px 10px;border:1px solid #DFC99E;border-radius:6px;background:white;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10.5px;color:#8C6B3E;font-weight:500">City / Village</div>
+          <input id="af-city" type="text" placeholder="Hyderabad" onkeydown="if(event.key==='Enter')rv_savePerson()" style="padding:8px 10px;border:1px solid #DFC99E;border-radius:6px;background:white;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10.5px;color:#8C6B3E;font-weight:500">Gotra</div>
+          <input id="af-gotra" type="text" placeholder="Bharadwaj" onkeydown="if(event.key==='Enter')rv_savePerson()" style="padding:8px 10px;border:1px solid #DFC99E;border-radius:6px;background:white;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:10.5px;color:#8C6B3E;font-weight:500">Nakshatra</div>
+          <input id="af-naksh" type="text" placeholder="Rohini" oninput="chkNk()" onkeydown="if(event.key==='Enter')rv_savePerson()" style="padding:8px 10px;border:1px solid #DFC99E;border-radius:6px;background:white;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+        </div>
+        <div id="nkHint" style="grid-column:1/-1;font-size:11px;color:#B07A08;background:#FFFBEF;border:1px solid rgba(176,122,8,0.22);border-radius:5px;padding:6px 10px;display:none"></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button onclick="backToRels()" style="padding:9px 14px;border:1px solid #DFC99E;border-radius:6px;background:transparent;color:#8C6B3E;font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer">← Back</button>
+        <button onclick="savePerson()" style="flex:1;padding:9px;border:none;border-radius:6px;background:linear-gradient(135deg,#B07A08,#C4781A);color:white;font-family:'Yeseva One',serif;font-size:.85rem;cursor:pointer">Add to Tree ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Language strings ───────────────────────────────────────
+const L = {
+  en:{
+    changeLang:'🌐 Change Language',
+    lsNoteTitle:"You've been invited!",
+    lsNoteSub:(inv,rel)=>`<strong>${inv}</strong> has added you to the family tree. Fill in your details, and those of your parents, grandparents, siblings and children. Whatever you remember.`,
+    wTitle:(name)=>`Welcome, ${name}!`,
+    wBody:(inv,rel)=>inv?`<strong>${inv}</strong> has added you to the family tree as their <em>${rel}</em>.<br>Fill in what you know — your details, parents', grandparents', siblings' and children's. The more you add, the richer the tree.`:`Welcome! Fill in your family details below — yourself, your parents, grandparents, siblings and children. When done, tap <em>Show My Family Tree</em> to see your Vansha Vruksham.`,
+    you:'You', youSub:(inv,rel)=>inv&&rel?`${inv}'s ${rel}`:'About you',
+    sib:'Brothers & Sisters', sibSub:'Add as many as you know',
+    par:'Your Parents', parSub:'Add both if you know them',
+    gp:'Grandparents', gpSub:'Even one name is precious',
+    kids:'Your Children', kidsSub:'Add them to the tree',
+    opt:'Optional',
+    subTitle:'🌳 See Your Vansha Vruksham',
+    subDesc:"Everything you've filled in will bloom into a beautiful family tree.",
+    subLabel:'Show My Family Tree',
+    addSib:'Add a brother or sister',
+    addKid:'Add a child',
+    people:'people', added:'people added',
+    stickyBtn:'See Tree',
+    lName:'Full name', lDob:'Birth year', lCity:'Birth city / village',
+    lGotra:'Gotra', lNaksh:'Nakshatra (if known)', lNotes:'Notes (profession, nickname, village…)',
+    spName:'Full name', spDob:'Birth year', spCity:'Birth city', spGotra:'Gotra / Nakshatra',
+    rvTitle:'🌳 Your Vansha Vruksham',
+    rvSub:'This tree grows as more family members join',
+    rvShare:'Share', rvBack:'Back', rvInvite:'Invite family', rvWA:'WhatsApp',
+    shareMsg:(n)=>`🌳 *${n}'s Vansha Vruksham*\n\nWe're building our family tree on Vanshavali!\nJoin and add your branch:\n👉 https://vanshavali.in\n\nTakes 2 minutes. No app needed!`,
+    badges:{you:'YOU',spouse:'SPOUSE',sib:'SIBLING',father:'FATHER',mother:'MOTHER',
+      dadaji:'PAT. GRANDFATHER',dadiji:'PAT. GRANDMOTHER',
+      nanaji:'MAT. GRANDFATHER',naniji:'MAT. GRANDMOTHER',kid:'CHILD'},
+    nkLord:(n)=>`Lord: ${NK_LORDS[n]||''}`,
+  },
+  te:{
+    changeLang:'🌐 భాష మార్చండి',
+    lsNoteTitle:"మీకు ఆహ్వానం వచ్చింది!",
+    lsNoteSub:(inv,rel)=>`<strong>${inv}</strong> మీతను కుటుంబ వృక్షంలో చేర్చారు. మీ వివరాలు, తల్లిదండ్రులు, తాతయ్య అమ్మమ్మలు, అన్నదమ్ములు అక్కచెల్లెళ్ళు మరియు పిల్లల వివరాలు నమోదు చేయండి.`,
+    wTitle:(n)=>'మీ వంశ వృక్షం నిర్మించండి 🌳',
+    wBody:(inv,rel)=>`మీ కుటుంబ వివరాలు నమోదు చేయండి — మీవి, తల్లిదండ్రులవి, తాతయ్య అమ్మమ్మలవి, అన్నదమ్మలవి మరియు పిల్లలవి. మీరు నమోదు చేసే కొద్దీ మీ <em>వంశ వృక్షం</em> అందంగా పెరుగుతుంది.`,
+    you:'మీరు', youSub:(inv,rel)=>'మీ గురించి',
+    sib:'అన్నదమ్ములు & అక్కచెల్లెళ్ళు', sibSub:'తెలిసినవారిని చేర్చండి',
+    par:'మీ తల్లిదండ్రులు', parSub:'ఇద్దరినీ చేర్చండి',
+    gp:'తాతయ్య అమ్మమ్మలు', gpSub:'ఒక్క పేరు కూడా విలువైనది',
+    kids:'మీ పిల్లలు', kidsSub:'వారిని చెట్టులో చేర్చండి',
+    opt:'ఐచ్ఛికం',
+    subTitle:'🌳 మీ వంశ వృక్షం చూడండి',
+    subDesc:'మీరు నమోదు చేసింది అందమైన కుటుంబ వృక్షంగా కనిపిస్తుంది.',
+    subLabel:'వంశ వృక్షం చూపించు',
+    addSib:'అన్న / తమ్ముడు / అక్క / చెల్లి చేర్చండి',
+    addKid:'పిల్లలను చేర్చండి',
+    people:'మంది', added:'మంది చేర్చారు',
+    stickyBtn:'వృక్షం చూడు',
+    lName:'పూర్తి పేరు', lDob:'జన్మ సంవత్సరం', lCity:'పుట్టిన ఊరు / నగరం',
+    lGotra:'గోత్రం', lNaksh:'నక్షత్రం (తెలిస్తే)', lNotes:'మరిన్ని వివరాలు…',
+    spName:'పూర్తి పేరు', spDob:'జన్మ సంవత్సరం', spCity:'పుట్టిన నగరం', spGotra:'గోత్రం / నక్షత్రం',
+    rvTitle:'🌳 మీ వంశ వృక్షం',
+    rvSub:'మరిన్ని మంది join అయినప్పుడు ఈ వృక్షం పెద్దదవుతుంది',
+    rvShare:'షేర్', rvBack:'వెనక్కి', rvInvite:'కుటుంబాన్ని ఆహ్వానించండి', rvWA:'WhatsApp',
+    shareMsg:(n)=>`🌳 *${n} వంశ వృక్షం*\n\nVanshavali లో మా కుటుంబ వృక్షం నిర్మిస్తున్నాం!\nచేరండి:\n👉 https://vanshavali.in\n\n2 నిమిషాలు మాత్రమే!`,
+    badges:{you:'మీరు',spouse:'జీవిత భాగస్వామి',sib:'తోబుట్టువు',
+      father:'నాన్న',mother:'అమ్మ',
+      dadaji:'తాతయ్య (నాన్న వైపు)',dadiji:'నాయనమ్మ',
+      nanaji:'తాతయ్య (అమ్మ వైపు)',naniji:'అమ్మమ్మ',kid:'పిల్లలు'},
+    nkLord:(n)=>`అధిపతి: ${NK_LORDS[n]||''}`,
+  },
+  hi:{
+    changeLang:'🌐 भाषा बदलें',
+    lsNoteTitle:"आपको आमंत्रण मिला है!",
+    lsNoteSub:(inv,rel)=>`<strong>${inv}</strong> ने आपको पारिवारिक पेड़ में जोड़ा है। अपनी, माता-पिता की, दादा-दादी की, भाई-बहनों की और बच्चों की जानकारी भरें।`,
+    wTitle:(n)=>'अपना वंश वृक्षम् बनाएं 🌳',
+    wBody:(inv,rel)=>`अपनी, माता-पिता की, दादा-दादी की, भाई-बहनों की और बच्चों की जानकारी भरें। जितना याद हो उतना काफी है। जैसे-जैसे आप भरेंगे, आपका <em>वंश वृक्षम्</em> बड़ा होता जाएगा।`,
+    you:'आप', youSub:(inv,rel)=>'आपके बारे में',
+    sib:'भाई-बहन', sibSub:'जितने याद हों उतने जोड़ें',
+    par:'आपके माता-पिता', parSub:'दोनों की जानकारी भरें',
+    gp:'दादा-दादी / नाना-नानी', gpSub:'एक नाम भी बहुत है',
+    kids:'आपके बच्चे', kidsSub:'उन्हें भी पेड़ में जोड़ें',
+    opt:'वैकल्पिक',
+    subTitle:'🌳 अपना वंश वृक्षम् देखें',
+    subDesc:'आपने जो भरा है वो एक सुंदर परिवार के पेड़ के रूप में दिखेगा।',
+    subLabel:'मेरा वंश वृक्षम् दिखाओ',
+    addSib:'एक भाई या बहन जोड़ें',
+    addKid:'एक बच्चा जोड़ें',
+    people:'लोग', added:'लोग जोड़े',
+    stickyBtn:'पेड़ देखें',
+    lName:'पूरा नाम', lDob:'जन्म वर्ष', lCity:'जन्म स्थान',
+    lGotra:'गोत्र', lNaksh:'नक्षत्र (अगर पता हो)', lNotes:'कुछ और (पेशा, उपनाम, गाँव…)',
+    spName:'पूरा नाम', spDob:'जन्म वर्ष', spCity:'जन्म स्थान', spGotra:'गोत्र / नक्षत्र',
+    rvTitle:'🌳 आपका वंश वृक्षम्',
+    rvSub:'जैसे-जैसे और लोग जुड़ेंगे, पेड़ बड़ा होगा',
+    rvShare:'शेयर', rvBack:'वापस जाएं', rvInvite:'परिवार को बुलाएं', rvWA:'WhatsApp',
+    shareMsg:(n)=>`🌳 *${n} का वंश वृक्षम्*\n\nVanshavali पर हमारा पारिवारिक पेड़ बना रहे हैं!\nजुड़ें:\n👉 https://vanshavali.in\n\nसिर्फ 2 मिनट!`,
+    badges:{you:'आप',spouse:'पति/पत्नी',sib:'भाई/बहन',
+      father:'पिता जी',mother:'माता जी',
+      dadaji:'दादा जी',dadiji:'दादी जी',
+      nanaji:'नाना जी',naniji:'नानी जी',kid:'बच्चे'},
+    nkLord:(n)=>`स्वामी: ${NK_LORDS[n]||''}`,
+  }
+};
+
+const NK_LIST=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra',
+  'Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni',
+  'Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula',
+  'Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha',
+  'Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+const NK_LORDS={Ashwini:'Ketu',Bharani:'Venus',Krittika:'Sun',Rohini:'Moon',
+  Mrigashira:'Mars',Ardra:'Rahu',Punarvasu:'Jupiter',Pushya:'Saturn',
+  Ashlesha:'Mercury',Magha:'Ketu','Purva Phalguni':'Venus','Uttara Phalguni':'Sun',
+  Hasta:'Moon',Chitra:'Mars',Swati:'Rahu',Vishakha:'Jupiter',Anuradha:'Saturn',
+  Jyeshtha:'Mercury',Mula:'Ketu','Purva Ashadha':'Venus','Uttara Ashadha':'Sun',
+  Shravana:'Moon',Dhanishtha:'Mars',Shatabhisha:'Rahu','Purva Bhadrapada':'Jupiter',
+  'Uttara Bhadrapada':'Saturn',Revati:'Mercury'};
+
+// ─── State ──────────────────────────────────────────────────
+let lang='en', sibCount=0, kidCount=0;
+const BASE=['you','spouse','father','mother','dadaji','dadiji','nanaji','naniji'];
+
+// URL context
+const UP=new URLSearchParams(location.search);
+const ctxName=UP.get('name')||'';
+const ctxFrom=UP.get('from')||'';
+const ctxRel =UP.get('rel') ||'Family member';
+
+// ─── Language picker ───────────────────────────────────────
+function chooseLang(l){
+  lang=l;
+  saveTree(); // save language choice
+  // Update invite note on lang screen with chosen language
+  const s=L[l];
+  document.getElementById('langScreen').style.display='none';
+  document.getElementById('formScreen').style.display='block';
+  document.getElementById('stickyBar').style.display='flex';
+  document.getElementById('changeLangBtn').style.display='block';
+  applyLang();
+  // Pre-fill name if from URL
+  if(ctxName){
+    document.getElementById('you-name').value=ctxName;
+    onNm('you');
+  }
+}
+
+function showLangScreen(){
+  document.getElementById('langScreen').style.display='flex';
+  document.getElementById('formScreen').style.display='none';
+  document.getElementById('stickyBar').style.display='none';
+  document.getElementById('changeLangBtn').style.display='none';
+}
+
+// ─── Apply language to all UI ──────────────────────────────
+function applyLang(){
+  const s=L[lang];
+  const yourName=document.getElementById('you-name').value||ctxName||'Ramesh';
+
+  // Header
+  document.getElementById('changeLangBtn').textContent=s.changeLang;
+
+  // Lang screen note
+  document.getElementById('lsNoteTitle').textContent=s.lsNoteTitle;
+  document.getElementById('lsNoteSub').innerHTML=s.lsNoteSub(ctxFrom,ctxRel);
+
+  // Welcome
+  document.getElementById('wTitle').textContent=s.wTitle(yourName);
+  document.getElementById('wBody').innerHTML=s.wBody(ctxFrom,ctxRel);
+
+  // Section headings
+  document.getElementById('shYou').textContent=s.you;
+  document.getElementById('shYouS').textContent=s.youSub(ctxFrom,ctxRel);
+  document.getElementById('shSib').textContent=s.sib;
+  document.getElementById('shSibS').textContent=s.sibSub;
+  document.getElementById('shPar').textContent=s.par;
+  document.getElementById('shParS').textContent=s.parSub;
+  document.getElementById('shGp').textContent=s.gp;
+  document.getElementById('shGpS').textContent=s.gpSub;
+  document.getElementById('shKids').textContent=s.kids;
+  document.getElementById('shKidsS').textContent=s.kidsSub;
+  ['shOptSib','shOptPar','shOptGp','shOptKids'].forEach(id=>{
+    document.getElementById(id).textContent=s.opt;
+  });
+
+  // Badges
+  const bd=s.badges;
+  const bdgMap={you:'you',spouse:'spouse',father:'father',mother:'mother',
+    dadaji:'dadaji',dadiji:'dadiji',nanaji:'nanaji',naniji:'naniji'};
+  Object.entries(bdgMap).forEach(([id,key])=>{
+    const el=document.getElementById('b-'+id);
+    if(el) el.textContent=bd[key]||key.toUpperCase();
+  });
+  // Sibling badges
+  for(let i=1;i<=sibCount;i++){
+    const el=document.getElementById('b-sib'+i);
+    if(el) el.textContent=bd.sib||(s.sib.split(' ')[0]+' '+i);
+  }
+  // Kid badges
+  for(let i=1;i<=kidCount;i++){
+    const el=document.getElementById('b-kid'+i);
+    if(el) el.textContent=bd.kid||(s.kids.split(' ')[0]+' '+i);
+  }
+
+  // Form labels
+  ['lName','lDob','lCity','lGotra','lNaksh','lNotes'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=s[id];
+  });
+  ['spName','spDob','spCity','spGotra'].forEach(id=>{
+    const el=document.getElementById('l'+id.charAt(0).toUpperCase()+id.slice(1));
+    // These labels are inside spouse card, find by custom id
+  });
+
+  // Add buttons
+  document.getElementById('addSibBtn').querySelector('span:last-child').textContent=s.addSib;
+  document.getElementById('addKidBtn').querySelector('span:last-child').textContent=s.addKid;
+  document.getElementById('lblAddSib').textContent=s.addSib;
+  document.getElementById('lblAddKid').textContent=s.addKid;
+
+  // Submit
+  document.getElementById('subTitle').textContent=s.subTitle;
+  document.getElementById('subDesc').textContent=s.subDesc;
+  document.getElementById('subLabel').textContent=s.subLabel;
+
+  // Reveal
+  document.getElementById('rvT').textContent=s.rvTitle;
+  document.getElementById('rvS').textContent=s.rvSub;
+  document.getElementById('rvShareLbl').textContent=s.rvShare;
+  document.getElementById('rvBack').textContent=s.rvBack;
+  document.getElementById('rvInvite').textContent=s.rvInvite;
+  document.getElementById('rvWA').textContent=s.rvWA;
+
+  // Sticky
+  document.getElementById('sBtnLbl').textContent=s.stickyBtn;
+
+  updateCounts();
+}
+
+// ─── Card toggle ───────────────────────────────────────────
+function tog(id){
+  const card=document.getElementById('pc-'+id);
+  const fields=document.getElementById('f-'+id);
+  if(!card||!fields) return;
+  const open=card.classList.contains('open');
+  card.classList.toggle('open',!open);
+  fields.style.display=open?'none':'grid';
+}
+
+// ─── Name update ──────────────────────────────────────────
+function onNm(id){
+  const val=(document.getElementById(id+'-name')||{}).value?.trim()||'';
+  const nd=document.getElementById('n-'+id);
+  const tk=document.getElementById('t-'+id);
+  const card=document.getElementById('pc-'+id);
+  if(!nd) return;
+  if(val){
+    nd.textContent=val; nd.classList.remove('empty');
+    if(tk) tk.style.display='inline';
+    if(card) card.classList.add('filled');
+  } else {
+    nd.textContent=nd.dataset.ph||'';
+    nd.classList.add('empty');
+    if(tk) tk.style.display='none';
+    if(card) card.classList.remove('filled');
+  }
+  if(id==='you') applyLang();
+  updateCounts();
+  saveTree();
+}
+
+// ─── Nakshatra preview ────────────────────────────────────
+function onNk(id){
+  const val=(document.getElementById(id+'-naksh')||{}).value?.trim()||'';
+  const box=document.getElementById('nk-'+id);
+  const nm=document.getElementById('nkn-'+id);
+  const dt=document.getElementById('nkd-'+id);
+  if(!box) return;
+  const match=val.length>2&&NK_LIST.find(n=>n.toLowerCase().startsWith(val.toLowerCase()));
+  if(match){
+    box.style.display='flex';
+    nm.textContent='⭐ '+match+' Nakshatra';
+    dt.textContent=L[lang].nkLord(match);
+  } else {
+    box.style.display='none';
+  }
+}
+
+function onF(){ updateCounts(); saveTree(); }
+
+// ─── Count ────────────────────────────────────────────────
+function countFilled(){
+  const all=[...BASE];
+  for(let i=1;i<=sibCount;i++) all.push('sib'+i);
+  for(let i=1;i<=kidCount;i++) all.push('kid'+i);
+  return all.filter(id=>(document.getElementById(id+'-name')||{}).value?.trim()).length;
+}
+function updateCounts(){
+  const n=countFilled();
+  const s=L[lang];
+  document.getElementById('prog').style.width=Math.min(96,n*7+4)+'%';
+  document.getElementById('filledN').textContent=n;
+  document.getElementById('filledW').textContent=s.people;
+  document.getElementById('sNum').textContent=n;
+  document.getElementById('sWord').textContent=s.added;
+}
+
+// ─── Add sibling ──────────────────────────────────────────
+function addSibling(){
+  sibCount++;
+  const id='sib'+sibCount;
+  const s=L[lang];
+  const div=document.createElement('div');
+  div.className='pc open'; div.id='pc-'+id;
+  div.innerHTML=`
+    <div class="pc-h" onclick="tog('${id}')">
+      <span class="bdg b-s" id="b-${id}">${s.badges.sib||'SIBLING'} ${sibCount}</span>
+      <span class="pcn empty" id="n-${id}" data-ph="${s.sib.split(' ')[0]+' '+sibCount}">${s.sib.split(' ')[0]+' '+sibCount}</span>
+      <span class="pctick" id="t-${id}">✓</span>
+      <span class="pcarr">▾</span>
+    </div>
+    <div class="pf" id="f-${id}" style="display:grid">
+      <div class="fg full"><div class="fl">${s.lName}</div>
+        <input class="fi" type="text" id="${id}-name" placeholder="Name" oninput="onNm('${id}')"></div>
+      <div class="fg"><div class="fl">${s.lDob}</div>
+        <input class="fi" type="text" maxlength="4" id="${id}-dob" placeholder="1960" oninput="onF()"></div>
+      <div class="fg"><div class="fl">${s.lCity}</div>
+        <input class="fi" type="text" id="${id}-city" placeholder="" oninput="onF()"></div>
+      <div class="fg full"><div class="fl">${s.lNotes||'Notes'}</div>
+        <textarea class="fi" id="${id}-notes" placeholder="Married, lives in…" oninput="onF()"></textarea></div>
+    </div>`;
+  document.getElementById('sib-list').appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'center'});
+  updateCounts();
+}
+
+// ─── Add child ────────────────────────────────────────────
+function addKid(){
+  kidCount++;
+  const id='kid'+kidCount;
+  const s=L[lang];
+  const div=document.createElement('div');
+  div.className='pc open'; div.id='pc-'+id;
+  div.innerHTML=`
+    <div class="pc-h" onclick="tog('${id}')">
+      <span class="bdg b-l" id="b-${id}">${s.badges.kid||'CHILD'} ${kidCount}</span>
+      <span class="pcn empty" id="n-${id}" data-ph="${(s.kids||'Child')+' '+kidCount}">${(s.kids||'Child')+' '+kidCount}</span>
+      <span class="pctick" id="t-${id}">✓</span>
+      <span class="pcarr">▾</span>
+    </div>
+    <div class="pf" id="f-${id}" style="display:grid">
+      <div class="fg full"><div class="fl">${s.lName}</div>
+        <input class="fi" type="text" id="${id}-name" placeholder="Name" oninput="onNm('${id}')"></div>
+      <div class="fg"><div class="fl">${s.lDob}</div>
+        <input class="fi" type="text" maxlength="4" id="${id}-dob" placeholder="1985" oninput="onF()"></div>
+      <div class="fg"><div class="fl">${s.lCity}</div>
+        <input class="fi" type="text" id="${id}-city" placeholder="" oninput="onF()"></div>
+    </div>`;
+  document.getElementById('kids-list').appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'center'});
+  updateCounts();
+}
+
+// ─── Get data ─────────────────────────────────────────────
+function getData(){
+  const g=(id,f)=>(document.getElementById(id+'-'+f)||{}).value?.trim()||'';
+  const out={};
+  [...BASE].forEach(id=>{
+    const nm=g(id,'name');
+    if(nm||id==='you') out[id]={name:nm||'?',dob:g(id,'dob'),city:g(id,'city'),
+      gotra:g(id,'gotra'),naksh:g(id,'naksh'),notes:g(id,'notes')};
+  });
+  for(let i=1;i<=sibCount;i++){
+    const id='sib'+i; const nm=g(id,'name');
+    if(nm) out[id]={name:nm,dob:g(id,'dob'),city:g(id,'city'),role:'sib'};
+  }
+  for(let i=1;i<=kidCount;i++){
+    const id='kid'+i; const nm=g(id,'name');
+    if(nm) out[id]={name:nm,dob:g(id,'dob'),city:g(id,'city'),role:'kid'};
+  }
+  return out;
+}
+
+// ─── Graph state for interactive reveal ──────────────────
+// ── Relationship definitions (used in rv_openAdd) ──────────
+// Relations available per person type
+// key = relation key, i = icon, l = label, s = subtitle, max = max allowed
+// 'context' = hint shown instead of button when ambiguous
+
+const RV_RELS={
+  en:{
+    s1:'Immediate family', s2:'Extended family',
+    // Full relation list used by buildRvGrid with context-awareness
+    r:[
+      {k:'father',   i:'👨', l:'Father',        s:'His/her father',           max:1},
+      {k:'mother',   i:'👩', l:'Mother',        s:'His/her mother',           max:1},
+      {k:'spouse',   i:'💑', l:'Spouse',        s:'Husband / Wife',           max:1},
+      {k:'son',      i:'👦', l:'Son',           s:'Male child',               max:99},
+      {k:'daughter', i:'👧', l:'Daughter',      s:'Female child',             max:99},
+      {k:'brother',  i:'🧑', l:'Brother',       s:'Male sibling',             max:99},
+      {k:'sister',   i:'👩', l:'Sister',        s:'Female sibling',           max:99},
+      {k:'patgf',    i:'👴', l:'Pat. Grandfather', s:"Father's father",       max:1},
+      {k:'patgm',    i:'👵', l:'Pat. Grandmother', s:"Father's mother",       max:1},
+      {k:'matgf',    i:'👴', l:'Mat. Grandfather', s:"Mother's father",       max:1},
+      {k:'matgm',    i:'👵', l:'Mat. Grandmother', s:"Mother's mother",       max:1},
+    ],
+    // Context hints for ambiguous relations
+    hints:{
+      uncle:  'Tap on Father or Mother → add their Brother/Sister',
+      aunt:   'Tap on Father or Mother → add their Brother/Sister',
+      nephew: 'Tap on a sibling → add their Son/Daughter',
+      niece:  'Tap on a sibling → add their Son/Daughter',
+      grandchild: 'Tap on a child → add their Son/Daughter',
+    }
+  },
+  te:{
+    s1:'సమీప కుటుంబం', s2:'దూర కుటుంబం',
+    r:[
+      {k:'father',   i:'👨', l:'నాన్న',          s:'తండ్రి',                   max:1},
+      {k:'mother',   i:'👩', l:'అమ్మ',           s:'తల్లి',                    max:1},
+      {k:'spouse',   i:'💑', l:'జీవిత భాగస్వామి', s:'భర్త / భార్య',            max:1},
+      {k:'son',      i:'👦', l:'కొడుకు',         s:'మగ పిల్లవాడు',             max:99},
+      {k:'daughter', i:'👧', l:'కూతురు',         s:'ఆడ పిల్ల',                max:99},
+      {k:'brother',  i:'🧑', l:'అన్న / తమ్ముడు', s:'సోదరుడు',                 max:99},
+      {k:'sister',   i:'👩', l:'అక్క / చెల్లి',  s:'సోదరి',                   max:99},
+      {k:'patgf',    i:'👴', l:'తాతయ్య (నాన్న)', s:"నాన్న తండ్రి",            max:1},
+      {k:'patgm',    i:'👵', l:'నాయనమ్మ',       s:"నాన్న తల్లి",              max:1},
+      {k:'matgf',    i:'👴', l:'తాతయ్య (అమ్మ)', s:"అమ్మ తండ్రి",             max:1},
+      {k:'matgm',    i:'👵', l:'అమ్మమ్మ',       s:"అమ్మ తల్లి",               max:1},
+    ],
+    hints:{
+      uncle:  'నాన్న లేదా అమ్మపై నొక్కండి → వారి అన్న/తమ్ముని చేర్చండి',
+      aunt:   'నాన్న లేదా అమ్మపై నొక్కండి → వారి అక్క/చెల్లిని చేర్చండి',
+      nephew: 'సోదరుడు/సోదరిపై నొక్కండి → వారి పిల్లలను చేర్చండి',
+      niece:  'సోదరుడు/సోదరిపై నొక్కండి → వారి పిల్లలను చేర్చండి',
+      grandchild: 'పిల్లలపై నొక్కండి → వారి పిల్లలను చేర్చండి',
+    }
+  },
+  hi:{
+    s1:'नज़दीकी परिवार', s2:'बड़ा परिवार',
+    r:[
+      {k:'father',   i:'👨', l:'पिता जी',       s:'पिता',                    max:1},
+      {k:'mother',   i:'👩', l:'माता जी',       s:'माँ',                     max:1},
+      {k:'spouse',   i:'💑', l:'पति/पत्नी',     s:'जीवनसाथी',                max:1},
+      {k:'son',      i:'👦', l:'बेटा',          s:'पुत्र',                   max:99},
+      {k:'daughter', i:'👧', l:'बेटी',          s:'पुत्री',                  max:99},
+      {k:'brother',  i:'🧑', l:'भाई',           s:'सहोदर भाई',               max:99},
+      {k:'sister',   i:'👩', l:'बहन',           s:'सहोदरा बहन',              max:99},
+      {k:'patgf',    i:'👴', l:'दादा जी',       s:"पिता के पिता",            max:1},
+      {k:'patgm',    i:'👵', l:'दादी जी',       s:"पिता की माँ",             max:1},
+      {k:'matgf',    i:'👴', l:'नाना जी',       s:"माँ के पिता",             max:1},
+      {k:'matgm',    i:'👵', l:'नानी जी',       s:"माँ की माँ",              max:1},
+    ],
+    hints:{
+      uncle:  'पिता या माता पर टैप करें → उनके भाई/बहन जोड़ें',
+      aunt:   'पिता या माता पर टैप करें → उनके भाई/बहन जोड़ें',
+      nephew: 'भाई/बहन पर टैप करें → उनके बच्चे जोड़ें',
+      niece:  'भाई/बहन पर टैप करें → उनके बच्चे जोड़ें',
+      grandchild: 'बेटे/बेटी पर टैप करें → उनके बच्चे जोड़ें',
+    }
+  }
+};
+function rvRels(){return RV_RELS[lang]||RV_RELS.en}
+
+let rv_persons={}, rv_edges=[], rv_nid=100;
+function rv_uid(){ return 'r'+(rv_nid++) }
+function rv_getParents(p){return rv_edges.filter(e=>e.t==='pc'&&e.b===p).map(e=>e.a)}
+function rv_getChildren(p){return rv_edges.filter(e=>e.t==='pc'&&e.a===p).map(e=>e.b)}
+function rv_getSpouses(p){return rv_edges.filter(e=>e.t==='sp'&&(e.a===p||e.b===p)).map(e=>e.a===p?e.b:e.a)}
+function rv_getSiblings(p){return rv_edges.filter(e=>e.t==='sib'&&(e.a===p||e.b===p)).map(e=>e.a===p?e.b:e.a)}
+function rv_hasEdge(a,b,t){return rv_edges.some(e=>e.t===t&&((e.a===a&&e.b===b)||(e.a===b&&e.b===a)))}
+function rv_addE(a,b,t){if(a&&b&&a!==b&&!rv_hasEdge(a,b,t))rv_edges.push({a,b,t})}
+
+function rv_isTaken(pid,rel){
+  if(rel.max!==1)return false;
+  if(rel.k==='father')return rv_getParents(pid).some(id=>!rv_persons[id]?.isMother);
+  if(rel.k==='mother')return rv_getParents(pid).some(id=>rv_persons[id]?.isMother);
+  if(rel.k==='spouse')return rv_getSpouses(pid).length>0;
+  // Grandparents via father
+  if(rel.k==='patgf'){const f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);return f?rv_getParents(f).some(id=>!rv_persons[id]?.isMother):false}
+  if(rel.k==='patgm'){const f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);return f?rv_getParents(f).some(id=>rv_persons[id]?.isMother):false}
+  // Grandparents via mother
+  if(rel.k==='matgf'){const m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);return m?rv_getParents(m).some(id=>!rv_persons[id]?.isMother):false}
+  if(rel.k==='matgm'){const m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);return m?rv_getParents(m).some(id=>rv_persons[id]?.isMother):false}
+  return false;
+}
+
+function rv_openAdd(pid){
+  rv_shPid=pid;
+  const p=rv_persons[pid];
+
+  // Use full language-aware relation list from RELS
+  const cfg=rvRels();
+  const allRels=cfg.r; // full list including grandparents
+
+  document.getElementById('shTitle').textContent=(p.name||'?')+' — Add family';
+  document.getElementById('shSub').textContent=cfg.s1+' & '+cfg.s2;
+  document.getElementById('relPicker').style.display='block';
+  document.getElementById('addForm').style.display='none';
+  buildRvGrid(pid);
+  rv_showSheet();
+}
+
+function buildRvGrid(pid){
+  const cfg=rvRels();
+  const allRels=cfg.r;
+  const p=rv_persons[pid]||{};
+  const grid=document.getElementById('relPicker');
+  grid.innerHTML='';
+
+  // Section 1: Immediate family (first 7)
+  const sec1=document.createElement('div');
+  sec1.style.cssText='font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#8C6B3E;margin:4px 0 7px;padding-bottom:4px;border-bottom:1px solid #F4EAD5';
+  sec1.textContent=cfg.s1;
+  grid.appendChild(sec1);
+
+  const g1=document.createElement('div');
+  g1.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px';
+  grid.appendChild(g1);
+
+  // Section 2: Extended family (grandparents + rest)
+  const sec2=document.createElement('div');
+  sec2.style.cssText='font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#8C6B3E;margin:4px 0 7px;padding-bottom:4px;border-bottom:1px solid #F4EAD5';
+  sec2.textContent=cfg.s2;
+  grid.appendChild(sec2);
+
+  const g2=document.createElement('div');
+  g2.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px';
+  grid.appendChild(g2);
+
+  // Done button at bottom
+  const doneWrap=document.createElement('div');
+  doneWrap.style.cssText='margin-top:14px';
+  const doneBtn=document.createElement('button');
+  doneBtn.style.cssText='width:100%;padding:12px;border:none;border-radius:9px;background:linear-gradient(135deg,#B07A08,#C4781A);color:white;font-family:"Yeseva One",serif;font-size:.9rem;cursor:pointer;box-shadow:0 2px 8px rgba(176,122,8,0.3)';
+  doneBtn.textContent='✓ Done adding';
+  doneBtn.onclick=closeSheet;
+  doneWrap.appendChild(doneBtn);
+
+  allRels.forEach((rel,idx)=>{
+    const taken=rv_isTaken(pid,rel);
+    const btn=document.createElement('button');
+    btn.style.cssText=
+      'display:flex;align-items:center;gap:8px;padding:11px 12px;'
+      +'border:1.5px solid '+(taken?'#DFC99E':'#C4A055')+';'
+      +'border-radius:9px;background:'+(taken?'#F4EAD5':'#FEFDF9')+';'
+      +'cursor:'+(taken?'default':'pointer')+';'
+      +'font-family:"DM Sans",sans-serif;'
+      +'opacity:'+(taken?'.55':'1')+';'
+      +'text-align:left;width:100%;transition:background .15s';
+
+    btn.innerHTML=
+      '<span style="font-size:1.1rem;flex-shrink:0">'+rel.i+'</span>'
+      +'<span style="flex:1;min-width:0">'
+        +'<div style="font-size:12.5px;font-weight:500;color:#5A3310;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+rel.l+'</div>'
+        +'<div style="font-size:10px;color:#8C6B3E;margin-top:1px">'+rel.s+'</div>'
+      +'</span>'
+      +(taken?'<span style="font-size:12px;color:#3E8A2C;flex-shrink:0">✓</span>':'<span style="font-size:13px;color:#C8A870;flex-shrink:0">+</span>');
+
+    if(!taken){
+      btn.onmouseenter=()=>btn.style.background='rgba(176,122,8,0.07)';
+      btn.onmouseleave=()=>btn.style.background='#FEFDF9';
+      btn.onclick=()=>rv_showForm(rel);
+    }
+
+    // First 7 = immediate, rest = extended
+    (idx<7?g1:g2).appendChild(btn);
+  });
+  // ── Context hints for ambiguous relations ──────────────
+  const hints=rvRels().hints||{};
+  if(Object.keys(hints).length){
+    const hintSec=document.createElement('div');
+    hintSec.style.cssText='margin-top:14px;background:rgba(176,122,8,0.06);border:1px solid rgba(176,122,8,0.18);border-radius:10px;padding:12px 14px';
+
+    const hintTitle=document.createElement('div');
+    hintTitle.style.cssText='font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8C6B3E;margin-bottom:8px';
+    hintTitle.textContent='How to add more relatives';
+    hintSec.appendChild(hintTitle);
+
+    const hintMap={
+      uncle:  {i:'👨', l:'Uncle / Aunt'},
+      nephew: {i:'🧒', l:'Nephew / Niece'},
+      grandchild: {i:'👶', l:'Grandchild'},
+    };
+
+    Object.entries(hintMap).forEach(([key,meta])=>{
+      const hint=hints[key];
+      if(!hint) return;
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid rgba(176,122,8,0.1)';
+      row.innerHTML=
+        '<span style="font-size:1rem;flex-shrink:0;margin-top:1px">'+meta.i+'</span>'
+        +'<div>'
+          +'<div style="font-size:12px;font-weight:500;color:#5A3310">'+meta.l+'</div>'
+          +'<div style="font-size:11px;color:#8C6B3E;margin-top:2px">'+hint+'</div>'
+        +'</div>';
+      hintSec.appendChild(row);
+    });
+    hintSec.lastChild.style.borderBottom='none';
+    grid.appendChild(hintSec);
+  }
+
+  grid.appendChild(doneWrap);
+}
+let rv_shPid=null, rv_pendRel=null;
+
+function rv_showForm(rel){
+  rv_pendRel=rel;
+  document.getElementById('afTitle').textContent=rel.i+' '+rel.l;
+  ['af-name','af-dob','af-city','af-gotra','af-naksh'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  document.getElementById('nkHint').style.display='none';
+  document.getElementById('relPicker').style.display='none';
+  document.getElementById('addForm').style.display='block';
+  setTimeout(()=>document.getElementById('af-name').focus(),80);
+}
+
+function rv_savePerson(){
+  const name=(document.getElementById('af-name')||{}).value?.trim();
+  if(!name){document.getElementById('af-name')?.focus();return}
+
+  // ── Check for duplicate name — offer to link existing person ──
+  const existingMatch=Object.entries(rv_persons).find(([id,p])=>
+    p.name&&p.name.toLowerCase()===name.toLowerCase()&&id!==rv_shPid
+  );
+  if(existingMatch){
+    const [existId,existP]=existingMatch;
+    // Ask if they want to link the existing person
+    if(confirm('"'+name+'" already exists in your tree.\n\nTap OK to link the existing '+name+' (no duplicate).\nTap Cancel to add as a new person with the same name.')){
+      // Link existing person using the chosen relationship
+      _linkExistingPerson(existId, rv_shPid, rv_pendRel.k);
+      document.getElementById('addForm').style.display='none';
+      document.getElementById('relPicker').style.display='block';
+      buildRvGrid(rv_shPid);
+      renderReveal();
+      saveTree();
+      return;
+    }
+  }
+
+  const newId=rv_uid();
+  rv_persons[newId]={
+    name,
+    dob:(document.getElementById('af-dob')||{}).value||'',
+    city:(document.getElementById('af-city')||{}).value||'',
+    gotra:(document.getElementById('af-gotra')||{}).value||'',
+    naksh:(document.getElementById('af-naksh')||{}).value||'',
+    notes:''
+  };
+  const pid=rv_shPid, k=rv_pendRel.k;
+  if(k==='father'){
+    rv_persons[newId].isMother=false; rv_addE(newId,pid,'pc');
+    const m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother); if(m)rv_addE(newId,m,'sp');
+    rv_getSiblings(pid).forEach(sib=>rv_addE(newId,sib,'pc'));
+  } else if(k==='mother'){
+    rv_persons[newId].isMother=true; rv_addE(newId,pid,'pc');
+    const f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother); if(f)rv_addE(f,newId,'sp');
+    rv_getSiblings(pid).forEach(sib=>rv_addE(newId,sib,'pc'));
+  } else if(k==='spouse'){
+    rv_addE(pid,newId,'sp');
+  } else if(k==='son'||k==='daughter'){
+    rv_addE(pid,newId,'pc');
+    rv_getSpouses(pid).forEach(sp=>rv_addE(sp,newId,'pc'));
+  } else if(k==='brother'||k==='sister'){
+    rv_addE(pid,newId,'sib');
+    rv_getParents(pid).forEach(par=>rv_addE(par,newId,'pc'));
+    rv_getSiblings(pid).forEach(sib=>{if(sib!==newId)rv_addE(sib,newId,'sib')});
+  } else if(k==='patgf'){
+    // Paternal grandfather — father's father
+    rv_persons[newId].isMother=false;
+    let f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);
+    if(!f){
+      f=rv_uid();
+      rv_persons[f]={name:'?',placeholder:true,isMother:false,dob:'',city:'',gotra:'',naksh:'',notes:''};
+      rv_addE(f,pid,'pc');
+    }
+    rv_addE(newId,f,'pc');
+    const pgm=rv_getParents(f).find(id=>rv_persons[id]?.isMother);
+    if(pgm) rv_addE(newId,pgm,'sp');
+  } else if(k==='patgm'){
+    // Paternal grandmother — father's mother
+    rv_persons[newId].isMother=true;
+    let f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);
+    if(!f){
+      f=rv_uid();
+      rv_persons[f]={name:'?',placeholder:true,isMother:false,dob:'',city:'',gotra:'',naksh:'',notes:''};
+      rv_addE(f,pid,'pc');
+    }
+    rv_addE(newId,f,'pc');
+    const pgf=rv_getParents(f).find(id=>!rv_persons[id]?.isMother);
+    if(pgf) rv_addE(pgf,newId,'sp');
+  } else if(k==='matgf'){
+    // Maternal grandfather — mother's father
+    rv_persons[newId].isMother=false;
+    let m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);
+    if(!m){
+      m=rv_uid();
+      rv_persons[m]={name:'?',placeholder:true,isMother:true,dob:'',city:'',gotra:'',naksh:'',notes:''};
+      rv_addE(m,pid,'pc');
+    }
+    rv_addE(newId,m,'pc');
+    const mgm=rv_getParents(m).find(id=>rv_persons[id]?.isMother);
+    if(mgm) rv_addE(newId,mgm,'sp');
+  } else if(k==='matgm'){
+    // Maternal grandmother — mother's mother
+    rv_persons[newId].isMother=true;
+    let m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);
+    if(!m){
+      m=rv_uid();
+      rv_persons[m]={name:'?',placeholder:true,isMother:true,dob:'',city:'',gotra:'',naksh:'',notes:''};
+      rv_addE(m,pid,'pc');
+    }
+    rv_addE(newId,m,'pc');
+    const mgf=rv_getParents(m).find(id=>!rv_persons[id]?.isMother);
+    if(mgf) rv_addE(mgf,newId,'sp');
+  }
+  // Stay open — refresh picker so they can add another relation
+  renderReveal();
+  document.getElementById('addForm').style.display='none';
+  document.getElementById('relPicker').style.display='block';
+  buildRvGrid(rv_shPid);
+  // Mini confetti
+  const _cols=['#C4A055','#D4A830','#3A7A28'];
+  for(let i=0;i<10;i++){setTimeout(()=>{const el=document.createElement('div');el.className='cp';const sz=4+Math.random()*5;el.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${_cols[Math.floor(Math.random()*_cols.length)]};transform:rotate(${Math.random()*360}deg);animation-duration:${1.5+Math.random()}s;`;document.body.appendChild(el);setTimeout(()=>el.remove(),3000)},i*20)}
+  saveTree();
+}
+
+function _linkExistingPerson(existId, pid, k){
+  // Link an already-existing person to pid with relationship k
+  if(k==='father'){
+    rv_persons[existId].isMother=false;
+    rv_addE(existId,pid,'pc');
+    const m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);
+    if(m)rv_addE(existId,m,'sp');
+    rv_getSiblings(pid).forEach(sib=>rv_addE(existId,sib,'pc'));
+  } else if(k==='mother'){
+    rv_persons[existId].isMother=true;
+    rv_addE(existId,pid,'pc');
+    const f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);
+    if(f)rv_addE(f,existId,'sp');
+    rv_getSiblings(pid).forEach(sib=>rv_addE(existId,sib,'pc'));
+  } else if(k==='spouse'){
+    rv_addE(pid,existId,'sp');
+  } else if(k==='son'||k==='daughter'){
+    rv_addE(pid,existId,'pc');
+    rv_getSpouses(pid).forEach(sp=>rv_addE(sp,existId,'pc'));
+  } else if(k==='brother'||k==='sister'){
+    rv_addE(pid,existId,'sib');
+    rv_getParents(pid).forEach(par=>rv_addE(par,existId,'pc'));
+    rv_getSiblings(pid).forEach(sib=>{if(sib!==existId)rv_addE(sib,existId,'sib')});
+  } else if(k==='patgf'){
+    rv_persons[existId].isMother=false;
+    let f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);
+    if(!f){f=rv_uid();rv_persons[f]={name:'?',placeholder:true,isMother:false,dob:'',city:'',gotra:'',naksh:'',notes:''};rv_addE(f,pid,'pc')}
+    rv_addE(existId,f,'pc');
+  } else if(k==='patgm'){
+    rv_persons[existId].isMother=true;
+    let f=rv_getParents(pid).find(id=>!rv_persons[id]?.isMother);
+    if(!f){f=rv_uid();rv_persons[f]={name:'?',placeholder:true,isMother:false,dob:'',city:'',gotra:'',naksh:'',notes:''};rv_addE(f,pid,'pc')}
+    rv_addE(existId,f,'pc');
+  } else if(k==='matgf'){
+    rv_persons[existId].isMother=false;
+    let m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);
+    if(!m){m=rv_uid();rv_persons[m]={name:'?',placeholder:true,isMother:true,dob:'',city:'',gotra:'',naksh:'',notes:''};rv_addE(m,pid,'pc')}
+    rv_addE(existId,m,'pc');
+  } else if(k==='matgm'){
+    rv_persons[existId].isMother=true;
+    let m=rv_getParents(pid).find(id=>rv_persons[id]?.isMother);
+    if(!m){m=rv_uid();rv_persons[m]={name:'?',placeholder:true,isMother:true,dob:'',city:'',gotra:'',naksh:'',notes:''};rv_addE(m,pid,'pc')}
+    rv_addE(existId,m,'pc');
+  }
+}
+
+// ══ NODE MENU — tap node to choose action ══════════════════
+function rv_nodeMenu(pid){
+  rv_shPid=pid;
+  const p=rv_persons[pid];
+  const grid=document.getElementById('relPicker');
+  grid.innerHTML='';
+
+  // Header
+  document.getElementById('shTitle').textContent=p.name||'Person';
+  document.getElementById('shSub').textContent='What would you like to do?';
+
+  // Action buttons
+  const actions=[
+    {icon:'➕', label:'Add family',   sub:'Add relatives to this person', fn:()=>{rv_openAdd(pid)}},
+    {icon:'✏️', label:'Edit details', sub:'Change name, year, city, gotra', fn:()=>{rv_openEdit(pid)}},
+    {icon:'🗑',  label:'Remove',       sub:'Delete this person from the tree', fn:()=>{rv_confirmDelete(pid)}, danger:true},
+  ];
+
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;flex-direction:column;gap:8px;padding:4px 0';
+  actions.forEach(a=>{
+    const btn=document.createElement('button');
+    btn.style.cssText=
+      'display:flex;align-items:center;gap:12px;padding:13px 14px;'
+      +'border:1.5px solid '+(a.danger?'rgba(168,72,24,0.3)':'#DFC99E')+';'
+      +'border-radius:10px;background:'+(a.danger?'rgba(168,72,24,0.05)':'#FEFDF9')+';'
+      +'cursor:pointer;font-family:"DM Sans",sans-serif;text-align:left;width:100%;'
+      +'transition:background .15s';
+    btn.innerHTML=
+      '<span style="font-size:1.4rem;flex-shrink:0">'+a.icon+'</span>'
+      +'<span style="flex:1">'
+        +'<div style="font-size:13.5px;font-weight:500;color:'+(a.danger?'#A84818':'#5A3310')+'">'+a.label+'</div>'
+        +'<div style="font-size:11px;color:#8C6B3E;margin-top:2px">'+a.sub+'</div>'
+      +'</span>'
+      +'<span style="font-size:13px;color:#C8A870">›</span>';
+    btn.onmouseenter=()=>btn.style.background=a.danger?'rgba(168,72,24,0.09)':'rgba(176,122,8,0.06)';
+    btn.onmouseleave=()=>btn.style.background=a.danger?'rgba(168,72,24,0.05)':'#FEFDF9';
+    btn.onclick=()=>{closeSheet();setTimeout(a.fn,80)};
+    wrap.appendChild(btn);
+  });
+  grid.appendChild(wrap);
+
+  document.getElementById('addForm').style.display='none';
+  rv_showSheet();
+}
+
+// ══ EDIT PERSON ════════════════════════════════════════════
+function rv_openEdit(pid){
+  rv_shPid=pid;
+  const p=rv_persons[pid];
+
+  document.getElementById('shTitle').textContent='Edit — '+p.name;
+  document.getElementById("shSub").textContent="Update this person's details";
+
+  const grid=document.getElementById('relPicker');
+  grid.innerHTML='';
+  document.getElementById('addForm').style.display='none';
+
+  // Build inline edit form
+  const form=document.createElement('div');
+  form.style.cssText='display:flex;flex-direction:column;gap:10px';
+
+  const fields=[
+    {id:'edit-name', label:'Full name', val:p.name||'', placeholder:'Name', type:'text'},
+    {id:'edit-dob',  label:'Birth year', val:p.dob||'',  placeholder:'1960', type:'text', maxlen:4},
+    {id:'edit-city', label:'City / Village', val:p.city||'', placeholder:'Hyderabad', type:'text'},
+    {id:'edit-gotra',label:'Gotra', val:p.gotra||'', placeholder:'Bharadwaj', type:'text'},
+    {id:'edit-naksh',label:'Nakshatra', val:p.naksh||'', placeholder:'Rohini', type:'text'},
+    {id:'edit-notes',label:'Notes', val:p.notes||'', placeholder:'Profession, stories…', type:'textarea'},
+  ];
+
+  const grid2=document.createElement('div');
+  grid2.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px';
+
+  fields.forEach((f,i)=>{
+    const fg=document.createElement('div');
+    fg.style.cssText='display:flex;flex-direction:column;gap:3px'+(i===0||i===5?';grid-column:1/-1':'');
+    const lbl=document.createElement('div');
+    lbl.style.cssText='font-size:10.5px;color:#8C6B3E;font-weight:500';
+    lbl.textContent=f.label;
+    const inp= f.type==='textarea'
+      ? document.createElement('textarea')
+      : document.createElement('input');
+    inp.id=f.id;
+    inp.style.cssText='padding:8px 10px;border:1.5px solid #DFC99E;border-radius:7px;background:white;font-family:"DM Sans",sans-serif;font-size:13px;outline:none;width:100%'+(f.type==='textarea'?';resize:none;height:48px':'');
+    inp.value=f.val;
+    inp.placeholder=f.placeholder;
+    if(f.maxlen) inp.maxLength=f.maxlen;
+    if(f.type!=='textarea') inp.type=f.type;
+    inp.onfocus=()=>inp.style.borderColor='#C4A055';
+    inp.onblur=()=>inp.style.borderColor='#DFC99E';
+    if(f.type!=='textarea') inp.onkeydown=(e)=>{if(e.key==='Enter')rv_saveEdit()};
+    fg.appendChild(lbl);fg.appendChild(inp);
+    grid2.appendChild(fg);
+  });
+  form.appendChild(grid2);
+
+  // Buttons
+  const btns=document.createElement('div');
+  btns.style.cssText='display:flex;gap:8px;margin-top:4px';
+
+  const cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='padding:10px 16px;border:1.5px solid #DFC99E;border-radius:8px;background:transparent;color:#8C6B3E;font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer';
+  cancelBtn.textContent='Cancel';
+  cancelBtn.onclick=closeSheet;
+
+  const saveBtn=document.createElement('button');
+  saveBtn.style.cssText='flex:1;padding:10px;border:none;border-radius:8px;background:linear-gradient(135deg,#B07A08,#C4781A);color:white;font-family:"Yeseva One",serif;font-size:.9rem;cursor:pointer;box-shadow:0 2px 8px rgba(176,122,8,0.3)';
+  saveBtn.textContent='Save Changes ✓';
+  saveBtn.onclick=rv_saveEdit;
+
+  btns.appendChild(cancelBtn);btns.appendChild(saveBtn);
+  form.appendChild(btns);
+  grid.appendChild(form);
+  rv_showSheet();
+  setTimeout(()=>document.getElementById('edit-name')?.focus(),100);
+}
+
+function rv_saveEdit(){
+  const p=rv_persons[rv_shPid];
+  if(!p) return;
+  const nameEl=document.getElementById('edit-name');
+  const newName=(nameEl?.value||'').trim();
+  if(!newName){nameEl?.focus();return}
+  p.name   = newName;
+  p.dob    = document.getElementById('edit-dob')?.value||'';
+  p.city   = document.getElementById('edit-city')?.value||'';
+  p.gotra  = document.getElementById('edit-gotra')?.value||'';
+  p.naksh  = document.getElementById('edit-naksh')?.value||'';
+  p.notes  = document.getElementById('edit-notes')?.value||'';
+  p.placeholder = false;
+  closeSheet();
+  renderReveal();
+  saveTree();
+  showToast('✓ Changes saved');
+}
+
+// ══ DELETE PERSON ══════════════════════════════════════════
+function rv_confirmDelete(pid){
+  const p=rv_persons[pid];
+  const name=p?.name||'this person';
+  // Show confirm menu in sheet
+  rv_shPid=pid;
+  document.getElementById('shTitle').textContent='Remove '+name+'?';
+  document.getElementById("shSub").textContent="This cannot be undone";
+
+  const grid=document.getElementById('relPicker');
+  grid.innerHTML='';
+  document.getElementById('addForm').style.display='none';
+
+  const wrap=document.createElement('div');
+  wrap.style.cssText='padding:4px 0';
+
+  // Warning text
+  const warn=document.createElement('div');
+  warn.style.cssText='background:rgba(168,72,24,0.07);border:1px solid rgba(168,72,24,0.2);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#5A3310;line-height:1.6';
+  warn.innerHTML='Removing <strong>'+name+'</strong> will also remove all connections they have in the tree. Their relatives will remain but the links to '+name+' will be deleted.';
+  wrap.appendChild(warn);
+
+  const btns=document.createElement('div');
+  btns.style.cssText='display:flex;gap:8px';
+
+  const cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='flex:1;padding:11px;border:1.5px solid #DFC99E;border-radius:8px;background:white;color:#5A3310;font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;font-weight:500';
+  cancelBtn.textContent='Keep them';
+  cancelBtn.onclick=closeSheet;
+
+  const delBtn=document.createElement('button');
+  delBtn.style.cssText='flex:1;padding:11px;border:none;border-radius:8px;background:linear-gradient(135deg,#A84818,#C44818);color:white;font-family:"Yeseva One",serif;font-size:.9rem;cursor:pointer';
+  delBtn.textContent='🗑 Remove';
+  delBtn.onclick=()=>rv_deletePerson(pid);
+
+  btns.appendChild(cancelBtn);btns.appendChild(delBtn);
+  wrap.appendChild(btns);
+  grid.appendChild(wrap);
+  rv_showSheet();
+}
+
+function rv_deletePerson(pid){
+  const name=rv_persons[pid]?.name||'Person';
+  delete rv_persons[pid];
+  rv_edges=rv_edges.filter(e=>e.a!==pid&&e.b!==pid);
+  closeSheet();
+  renderReveal();
+  saveTree();
+  showToast('🗑 '+name+' removed');
+}
+
+function rv_showSheet(){
+  const bg=document.getElementById('sheetBg'); if(bg)bg.style.display='block';
+  const sh=document.getElementById('sheet'); if(sh)sh.style.transform='translateY(0)';
+}
+function closeSheet(){
+  const bg=document.getElementById('sheetBg'); if(bg)bg.style.display='none';
+  const sh=document.getElementById('sheet'); if(sh)sh.style.transform='translateY(100%)';
+}
+function backToRels(){
+  document.getElementById('addForm').style.display='none';
+  document.getElementById('relPicker').style.display='block';
+}
+function chkNk(){
+  const NK=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+  const v=(document.getElementById('af-naksh')||{}).value?.trim()||'';
+  const h=document.getElementById('nkHint'); if(!h)return;
+  const m=v.length>2&&NK.find(n=>n.toLowerCase().startsWith(v.toLowerCase()));
+  if(m){h.style.display='block';h.textContent='⭐ '+m+' Nakshatra'}else h.style.display='none';
+}
+function savePerson(){
+  if(document.getElementById('reveal').classList.contains('show')){rv_savePerson();return}
+}
+
+// ─── Show/close reveal ────────────────────────────────────
+function showReveal(){
+  // Seed graph from form data
+  rv_persons={}; rv_edges=[]; rv_nid=100;
+  const data=getData();
+
+  function ap(key,extra){
+    const d=data[key]; if(!d&&key!=='you') return null;
+    const nd=d||{name:'?',dob:'',city:'',gotra:'',naksh:'',notes:''};
+    rv_persons[key]={name:nd.name||'?',dob:nd.dob||'',city:nd.city||'',gotra:nd.gotra||'',naksh:nd.naksh||'',notes:'',...(extra||{})};
+    return key;
+  }
+
+  const youId=ap('you',{isRoot:true});
+  const spId=ap('spouse'); if(youId&&spId)rv_addE(youId,spId,'sp');
+  const fatId=ap('father',{isMother:false});
+  const motId=ap('mother',{isMother:true});
+  if(fatId&&youId)rv_addE(fatId,youId,'pc');
+  if(motId&&youId)rv_addE(motId,youId,'pc');
+  if(fatId&&motId)rv_addE(fatId,motId,'sp');
+  ['dadaji','dadiji'].forEach(k=>{const gid=ap(k,{isMother:k==='dadiji'});if(gid&&fatId)rv_addE(gid,fatId,'pc')});
+  ['nanaji','naniji'].forEach(k=>{const gid=ap(k,{isMother:k==='naniji'});if(gid&&motId)rv_addE(gid,motId,'pc')});
+  for(let i=1;i<=sibCount;i++){
+    const id='sib'+i; const d=data[id]; if(!d)continue;
+    rv_persons[id]={name:d.name,dob:d.dob||'',city:d.city||'',gotra:'',naksh:'',notes:''};
+    if(youId)rv_addE(youId,id,'sib');
+    if(fatId)rv_addE(fatId,id,'pc');
+    if(motId)rv_addE(motId,id,'pc');
+  }
+  for(let i=1;i<=kidCount;i++){
+    const id='kid'+i; const d=data[id]; if(!d)continue;
+    rv_persons[id]={name:d.name,dob:d.dob||'',city:d.city||'',gotra:'',naksh:'',notes:''};
+    if(youId)rv_addE(youId,id,'pc');
+    if(spId)rv_addE(spId,id,'pc');
+  }
+
+  document.getElementById('reveal').classList.add('show');
+  setTimeout(()=>{ renderReveal(); launchConfetti(); saveTree(); },80);
+}
+function closeReveal(){
+  document.getElementById('reveal').classList.remove('show');
+  // Show the form so user can edit or see previous entries
+  document.getElementById('langScreen').style.display='none';
+  document.getElementById('formScreen').style.display='block';
+  const sb=document.getElementById('stickyBar');
+  if(sb) sb.style.display='flex';
+  const cb=document.getElementById('changeLangBtn');
+  if(cb) cb.style.display='block';
+}
+function inviteMore(){
+  closeReveal();
+  window.location.href='invite.html';
+}
+
+// ─── Render reveal tree (interactive) ─────────────────────
+function renderReveal(){
+  const wrap=document.getElementById('treeWrap');
+  Array.from(wrap.children).forEach(c=>{if(c.id!=='linesSvg'&&c.id!=='treeTitle')c.remove()});
+  document.getElementById('linesSvg').innerHTML='';
+
+  const ids=Object.keys(rv_persons).filter(id=>rv_persons[id]&&rv_persons[id].name);
+  console.log('[Vanshavali] renderReveal: ids=',ids.length,'persons=',Object.keys(rv_persons).length);
+  if(!ids.length){
+    console.warn('[Vanshavali] renderReveal called but no persons found. rv_persons keys:', Object.keys(rv_persons).length);
+    const msg=document.createElement('div');
+    msg.style.cssText='text-align:center;padding:60px 20px;color:#8C6B3E;font-family:"DM Sans",sans-serif';
+    msg.innerHTML='<div style="font-size:2rem;margin-bottom:12px">🌱</div>'
+      +'<div style="font-size:14px;font-weight:500;margin-bottom:8px;color:#5A3310">No family members yet</div>'
+      +'<div style="font-size:12px">Tap ✏️ Edit to go back and fill in your details</div>';
+    wrap.appendChild(msg);
+    return;
+  }
+
+  const rootId=ids.find(id=>rv_persons[id].isRoot)||ids[0];
+  const youName=rv_persons[rootId]?.name||'';
+  document.getElementById('treeTitle').textContent=youName?(youName+' — Vansha Vruksham'):'Vansha Vruksham';
+
+  // Assign generations (PC edges only, then propagate sp/sib)
+  const gen={};
+  try{
+    const hasParent=new Set(rv_edges.filter(e=>e.t==='pc').map(e=>e.b));
+    let roots=ids.filter(id=>!hasParent.has(id));
+    if(!roots.length) roots=[ids[0]];
+    roots.forEach(id=>gen[id]=0);
+    const q=[...roots];
+    while(q.length){
+      const id=q.shift();
+      rv_getChildren(id).forEach(c=>{
+        const want=(gen[id]||0)+1;
+        if(gen[c]===undefined||gen[c]<want){gen[c]=want;q.push(c)}
+      });
+    }
+  }catch(e){console.error('[Vanshavali] gen assignment error:',e)}
+  let changed=true, pass=0;
+  while(changed&&pass<20){
+    changed=false; pass++;
+    rv_edges.filter(e=>e.t==='sp'||e.t==='sib').forEach(e=>{
+      const ga=gen[e.a],gb=gen[e.b];
+      if(ga!==undefined&&gb===undefined){gen[e.b]=ga;changed=true}
+      else if(gb!==undefined&&ga===undefined){gen[e.a]=gb;changed=true}
+      else if(ga!==undefined&&gb!==undefined&&ga!==gb){
+        const aA=rv_getParents(e.a).length>0, bA=rv_getParents(e.b).length>0;
+        const use=aA?ga:bA?gb:Math.min(ga,gb);
+        if(gen[e.a]!==use){gen[e.a]=use;changed=true}
+        if(gen[e.b]!==use){gen[e.b]=use;changed=true}
+      }
+    });
+  }
+  ids.filter(id=>gen[id]===undefined).forEach(id=>{gen[id]=0});
+  const minG=Math.min(...Object.values(gen));
+  ids.forEach(id=>{gen[id]-=minG});
+
+  // Group by gen
+  const byGen={};
+  ids.forEach(id=>{const g=gen[id]??0;byGen[g]=byGen[g]||[];byGen[g].push(id)});
+  const gens=Object.keys(byGen).map(Number).sort((a,b)=>a-b);
+
+  // Sort rows — keep each person immediately next to their spouse
+  // Order: YOU + spouse → sibling1 + sibling1's spouse → sibling2 + sibling2's spouse → ...
+  function placeWithSpouse(id, row, placed, sorted){
+    if(placed.has(id)) return;
+    sorted.push(id); placed.add(id);
+    // Immediately place this person's spouse(s) right next to them
+    rv_getSpouses(id).filter(sp=>row.includes(sp)&&!placed.has(sp)).forEach(sp=>{
+      sorted.push(sp); placed.add(sp);
+    });
+  }
+
+  gens.forEach(g=>{
+    const row=byGen[g], placed=new Set(), sorted=[];
+    // Anchored = has parents or is root (these are the "primary" people in the row)
+    const anchored=row.filter(id=>rv_getParents(id).length>0||rv_persons[id]?.isRoot);
+    const free=row.filter(id=>!anchored.includes(id)&&!rv_getSpouses(id).some(sp=>anchored.includes(sp)));
+
+    anchored.forEach(id=>{
+      if(placed.has(id)) return;
+      // Place this person + their spouse right next to them
+      placeWithSpouse(id, row, placed, sorted);
+      // Then place each sibling + their spouse right after
+      rv_getSiblings(id).filter(sib=>row.includes(sib)&&!placed.has(sib)).forEach(sib=>{
+        placeWithSpouse(sib, row, placed, sorted);
+      });
+    });
+    // Place any remaining (unanchored, non-spouse) nodes
+    free.forEach(id=>placeWithSpouse(id, row, placed, sorted));
+    // Catch any still unplaced
+    row.forEach(id=>{if(!placed.has(id)){sorted.push(id);placed.add(id)}});
+    byGen[g]=sorted;
+  });
+
+  // Colours by role
+  const fills={};const borders={};const roleColors={};
+  // BFS-based role assignment — works for everyone regardless of depth
+  function computeRoles(overrideRootId){
+    const r0=overrideRootId||rootId;
+    const roles={};
+    roles[r0]='you';
+    const visited=new Set([r0]);
+    const q=[{id:r0,role:'you'}];
+
+    // For each role, what role do their relatives get?
+    const PROP={
+      'you':           {sp:'spouse',     ch:'child',       par:'parent',      sib:'sibling'},
+      'spouse':        {sp:null,         ch:'child',       par:'in-law',      sib:'brother-in-law'},
+      'sibling':       {sp:'sib-spouse', ch:'nephew',      par:'parent',      sib:'sibling'},
+      'sib-spouse':    {sp:null,         ch:'nephew',      par:'sib-in-law',  sib:'sibling'},
+      'child':         {sp:'child-spouse',ch:'grandchild', par:'you',         sib:'sibling'},
+      'child-spouse':  {sp:null,         ch:'grandchild',  par:'in-law',      sib:'child-spouse-sib'},
+      'grandchild':    {sp:'gc-spouse',  ch:'great-gc',    par:'child',       sib:null},
+      'gc-spouse':     {sp:null,         ch:'great-gc',    par:null,          sib:null},
+      'parent':        {sp:'parent-sp',  ch:'sibling',     par:'grandparent', sib:'uncle'},
+      'parent-sp':     {sp:null,         ch:'sibling',     par:'grandparent', sib:'uncle'},
+      'grandparent':   {sp:'grandparent-sp',ch:'parent',   par:'great-gp',    sib:'great-uncle'},
+      'uncle':         {sp:'uncle-sp',   ch:'cousin',      par:'grandparent', sib:null},
+      'uncle-sp':      {sp:null,         ch:'cousin',      par:null,          sib:null},
+      'cousin':        {sp:'cousin-sp',  ch:'cousin-child',par:'uncle',       sib:null},
+      'cousin-sp':     {sp:null,         ch:'cousin-child',par:null,          sib:null},
+      'nephew':        {sp:'nephew-sp',  ch:'grandnephew', par:'sibling',     sib:null},
+      'nephew-sp':     {sp:null,         ch:'grandnephew', par:null,          sib:null},
+      'brother-in-law':{sp:null,         ch:'nephew',       par:null,         sib:null},
+      'in-law':        {sp:null,         ch:'child-spouse',par:'grandparent-in-law',sib:null},
+    };
+
+    while(q.length){
+      const {id,role}=q.shift();
+      const rules=PROP[role]||{};
+
+      const addRel=(nid, relType)=>{
+        if(!nid||visited.has(nid)) return;
+        const r=rules[relType];
+        if(!r) return;
+        visited.add(nid);
+        let finalRole=r;
+        if(r==='parent'||r==='parent-sp'){
+          // Determine father vs mother:
+          // 1. Use isMother flag if explicitly set
+          // 2. Otherwise check if their co-parent (spouse) has isMother=true
+          // 3. Fallback: look at ALL parents of the current node's children
+          const p=rv_persons[nid];
+          if(p?.isMother===true) finalRole='mother';
+          else if(p?.isMother===false) finalRole='father';
+          else {
+            // Check spouse — if spouse is mother, this one is father
+            const spouses=rv_getSpouses(nid);
+            const spouseIsMother=spouses.some(sp=>rv_persons[sp]?.isMother===true);
+            const spouseIsFather=spouses.some(sp=>rv_persons[sp]?.isMother===false);
+            if(spouseIsMother) finalRole='father';
+            else if(spouseIsFather) finalRole='mother';
+            else {
+              // No flags anywhere — use position among co-parents
+              // Find siblings/children of this parent to determine index
+              const children=rv_getChildren(nid);
+              if(children.length>0){
+                const allParents=rv_getParents(children[0]);
+                finalRole=allParents.indexOf(nid)===0?'father':'mother';
+              } else {
+                finalRole='father'; // safe default
+              }
+            }
+          }
+        }
+        roles[nid]=finalRole;
+        q.push({id:nid, role:(finalRole==='mother'||finalRole==='father')?'parent':finalRole});
+      };
+
+      rv_getSpouses(id).forEach(sp=>addRel(sp,'sp'));
+      rv_getChildren(id).forEach(ch=>addRel(ch,'ch'));
+      rv_getParents(id).forEach(par=>addRel(par,'par'));
+      rv_getSiblings(id).forEach(sib=>addRel(sib,'sib'));
+    }
+
+    // Any unvisited = distant relative
+    ids.forEach(id=>{ if(!roles[id]) roles[id]='relative'; });
+    return roles;
+  }
+
+  const roleMap=computeRoles();
+
+  // Display labels
+  const ROLE_LABELS_ALL={
+    en:{
+      'you':'YOU','spouse':'SPOUSE','child':'CHILD','grandchild':'GRANDCHILD',
+      'great-gc':'GREAT GRANDCHILD','gc-spouse':'GRANDCHILD SPOUSE',
+      'child-spouse':'SON/DAUGHTER-IN-LAW','child-spouse-sib':'SPOUSE SIBLING',
+      'sibling':'SIBLING','sib-spouse':'IN-LAW','brother-in-law':'IN-LAW',
+      'nephew':'NEPHEW/NIECE','nephew-sp':'NEPHEW SPOUSE','grandnephew':'GRAND NEPHEW',
+      'nephew-in-law':'NEPHEW/NIECE','father':'FATHER','mother':'MOTHER','parent':'PARENT',
+      'parent-sp':'STEP PARENT','grandparent':'GRANDPARENT','great-gp':'GREAT GRANDPARENT',
+      'uncle':'UNCLE/AUNT','uncle-sp':'UNCLE SPOUSE','cousin':'COUSIN',
+      'cousin-sp':'COUSIN SPOUSE','cousin-child':'COUSIN CHILD',
+      'in-law':'PARENT-IN-LAW','sib-in-law':'SIB IN-LAWS',
+      'grandparent-in-law':'GRANDPARENT-IN-LAW','great-uncle':'GREAT UNCLE/AUNT',
+      'relative':'RELATIVE',
+      // gender-aware overrides handled in code
+      '_father-inlaw':'FATHER-IN-LAW','_mother-inlaw':'MOTHER-IN-LAW',
+      '_brother-inlaw':'BROTHER-IN-LAW','_sister-inlaw':'SISTER-IN-LAW',
+    },
+    te:{
+      'you':'మీరు','spouse':'భర్త/భార్య','child':'బిడ్డ','grandchild':'మనవడు/మనవరాలు',
+      'great-gc':'ముని మనవడు','gc-spouse':'మనవని భాగస్వామి',
+      'child-spouse':'కోడలు/అల్లుడు','child-spouse-sib':'భాగస్వామి సోదరుడు',
+      'sibling':'అన్న/అక్క/తమ్ముడు/చెల్లి',
+      'sib-spouse':'వదిన/బావ','brother-in-law':'బావ/ఆడపడుచు',
+      'nephew':'మేనల్లుడు/మేనకోడలు','nephew-sp':'మేనల్లుని భాగస్వామి',
+      'grandnephew':'మనమల్లుడు','nephew-in-law':'మేనల్లుడు/మేనకోడలు',
+      'father':'నాన్న','mother':'అమ్మ','parent':'తల్లి/తండ్రి',
+      'parent-sp':'సవత తల్లి/తండ్రి','grandparent':'తాతయ్య/అమ్మమ్మ',
+      'great-gp':'ముత్తాత/ముత్తవ్వ','uncle':'మావయ్య/అత్త',
+      'uncle-sp':'మావయ్య భాగస్వామి','cousin':'బంధువు',
+      'cousin-sp':'బంధువు భాగస్వామి','cousin-child':'బంధువు పిల్లలు',
+      'in-law':'అత్తమామలు','sib-in-law':'బంధువుల అత్తమామలు',
+      'grandparent-in-law':'తాతమామలు','great-uncle':'పెద్దమావయ్య/పెద్దత్త',
+      'relative':'బంధువు',
+      // gender-aware (target gender)
+      '_father-inlaw':'మామగారు','_mother-inlaw':'అత్తగారు',
+      // Root=female: husband's brother=బావ, husband's sister=ఆడపడుచు
+      // Root=male:   wife's brother=బావ, wife's sister=మరదలు
+      // Target male, root female → బావ (husband's brother)
+      // Target female, root female → ఆడపడుచు (husband's sister)
+      // Target male, root male → బావ (wife's brother)
+      // Target female, root male → మరదలు (wife's sister)
+      '_bil_rootF_tgtM':'బావ',
+      '_bil_rootF_tgtF':'ఆడపడుచు',
+      '_bil_rootM_tgtM':'బావ',
+      '_bil_rootM_tgtF':'మరదలు',
+      // sib-spouse: spouse's sibling's spouse
+      // Root=female: husband's brother's wife=వదిన, husband's sister's husband=బావ
+      // Root=male:   wife's brother's wife=వదిన, wife's sister's husband=బావమరిది
+      '_sibsp_rootF_tgtF':'వదిన',
+      '_sibsp_rootF_tgtM':'బావ',
+      '_sibsp_rootM_tgtF':'వదిన',
+      '_sibsp_rootM_tgtM':'బావమరిది',
+      // blood sibling gender
+      '_sib_male':'అన్న/తమ్ముడు',
+      '_sib_female':'అక్క/చెల్లి',
+    },
+    hi:{
+      'you':'आप','spouse':'पति/पत्नी','child':'बच्चे','grandchild':'पोता/पोती',
+      'great-gc':'परपोता','gc-spouse':'पोते का जीवनसाथी',
+      'child-spouse':'बहू/दामाद','child-spouse-sib':'जीवनसाथी के भाई/बहन',
+      'sibling':'भाई/बहन','sib-spouse':'देवर/भाभी','brother-in-law':'देवर/भाभी',
+      'nephew':'भतीजा/भांजी','nephew-sp':'भतीजे का जीवनसाथी',
+      'grandnephew':'परभतीजा','nephew-in-law':'भतीजा/भांजी',
+      'father':'पिता जी','mother':'माता जी','parent':'माता-पिता',
+      'parent-sp':'सौतेले माता-पिता','grandparent':'दादा/नाना',
+      'great-gp':'परदादा','uncle':'चाचा/मामा','uncle-sp':'चाचा का जीवनसाथी',
+      'cousin':'चचेरा/ममेरा','cousin-sp':'चचेरे का जीवनसाथी',
+      'cousin-child':'चचेरे के बच्चे','in-law':'सास-ससुर',
+      'sib-in-law':'रिश्तेदार सास-ससुर','grandparent-in-law':'ससुर के माता-पिता',
+      'great-uncle':'बड़े चाचा/मामा','relative':'रिश्तेदार',
+      // gender-aware
+      '_father-inlaw':'ससुर','_mother-inlaw':'सास',
+      '_brother-inlaw':'देवर/जीजा','_sister-inlaw':'भाभी/ननद',
+    },
+  };
+  const ROLE_LABELS=ROLE_LABELS_ALL[lang]||ROLE_LABELS_ALL.en;
+
+  // Colours
+  function roleColor(r){
+    if(r==='you') return '#A84818';
+    if(r==='spouse'||r==='child-spouse') return '#6A4A10';
+    if(r==='sibling') return '#2A5A7A';
+    if(r==='brother-in-law'||r==='sib-spouse') return '#5A3A7A';
+    if(r==='brother-in-law'||r==='child-spouse-sib') return '#3A4A7A';
+    if(r==='child'||r==='grandchild'||r==='great-gc') return '#2A6A1A';
+    if(r==='nephew'||r==='grandnephew'||r==='nephew-sp') return '#2A6A50';
+    if(r==='father'||r==='mother'||r==='parent') return '#3A6B20';
+    if(r==='grandparent'||r==='grandparent-sp'||r==='great-gp') return '#8C6B3E';
+    if(r==='uncle'||r==='uncle-sp') return '#5A3A7A';
+    if(r==='cousin'||r==='cousin-sp'||r==='cousin-child') return '#6A3A6A';
+    if(r.includes('in-law')||r==='in-law'||r==='parent-in-law') return '#5A4A2A';
+    return '#8C6B3E';
+  }
+  function roleFill(r){
+    if(r==='you') return '#FFFCF0';
+    if(r==='spouse'||r==='child-spouse') return '#FEFAF8';
+    if(r==='sibling') return '#F4F8FE';
+    if(r==='brother-in-law'||r==='sib-spouse') return '#F8F4FE';
+    if(r==='brother-in-law'||r==='child-spouse-sib') return '#F0F2FE';
+    if(r==='child'||r==='grandchild') return '#F5FEF0';
+    if(r==='nephew'||r==='grandnephew') return '#F0FEF8';
+    if(r==='father'||r==='mother') return '#F5FBF0';
+    if(r==='grandparent'||r==='grandparent-sp'||r==='great-gp') return '#FEFAF3';
+    if(r==='uncle'||r==='cousin') return '#FAF4FE';
+    return '#FEFEFE';
+  }
+  function roleBorder(r){
+    if(r==='you') return '#C4A055';
+    if(r==='spouse'||r==='child-spouse') return '#DEC89A';
+    if(r==='sibling') return '#8AAAC8';
+    if(r==='brother-in-law'||r==='sib-spouse') return '#A888C8';
+    if(r==='brother-in-law'||r==='child-spouse-sib') return '#7A8AC8';
+    if(r==='child'||r==='grandchild') return '#88B878';
+    if(r==='nephew'||r==='grandnephew') return '#88C8A0';
+    if(r==='father'||r==='mother') return '#88B878';
+    if(r==='grandparent'||r==='grandparent-sp'||r==='great-gp') return '#DEC89A';
+    if(r==='uncle'||r==='cousin') return '#B888C8';
+    return '#DFC99E';
+  }
+
+  ids.forEach(id=>{
+    const p=rv_persons[id];
+    const r=roleMap[id]||'relative';
+    p._role=r;
+    // Gender-aware labels — use current language
+    const _RL=ROLE_LABELS_ALL[lang]||ROLE_LABELS_ALL.en;
+    let displayLabel=_RL[r]||r.toUpperCase();
+
+    function _genderLabel(pid2, femKey, malKey, defVal){
+      const px=rv_persons[pid2];
+      if(px?.isMother===true) return _RL[femKey]||femKey;
+      if(px?.isMother===false) return _RL[malKey]||malKey;
+      const sp2=rv_getSpouses(pid2)[0];
+      if(sp2&&rv_persons[sp2]?.isMother===true) return _RL[malKey]||malKey;
+      if(sp2&&rv_persons[sp2]?.isMother===false) return _RL[femKey]||femKey;
+      return defVal;
+    }
+    if(r==='in-law'||r==='sib-in-law'){
+      displayLabel=_genderLabel(id,'_mother-inlaw','_father-inlaw',
+        r==='sib-in-law'?(_RL['sib-in-law']||'SIB IN-LAWS'):(_RL['in-law']||'IN-LAWS'));
+    }
+    if(r==='sibling'){
+      // Gender of target person
+      const _tgt=rv_persons[id];
+      if(_tgt?.isMother===true && _RL['_sib_female']) displayLabel=_RL['_sib_female'];
+      else if(_tgt?.isMother===false && _RL['_sib_male']) displayLabel=_RL['_sib_male'];
+      // else keep default sibling label
+    }
+    if(r==='brother-in-law'||r==='sib-spouse'){
+      // Determine root gender
+      const _rootId2=Object.keys(rv_persons).find(pid=>rv_persons[pid].isRoot);
+      const _rootIsFemale=_rootId2&&rv_persons[_rootId2]?.isMother===true;
+      const _rootIsMale=_rootId2&&rv_persons[_rootId2]?.isMother===false;
+      const _tgt2=rv_persons[id];
+      const _tgtIsFemale=_tgt2?.isMother===true;
+      const _tgtIsMale=_tgt2?.isMother===false;
+      // Try root+target gender specific key first
+      if(r==='brother-in-law'){
+        const _key= _rootIsFemale&&_tgtIsMale ? '_bil_rootF_tgtM'
+                  : _rootIsFemale&&_tgtIsFemale ? '_bil_rootF_tgtF'
+                  : _rootIsMale&&_tgtIsMale ? '_bil_rootM_tgtM'
+                  : _rootIsMale&&_tgtIsFemale ? '_bil_rootM_tgtF'
+                  : null;
+        if(_key&&_RL[_key]) displayLabel=_RL[_key];
+        else displayLabel=_genderLabel(id,'_sister-inlaw','_brother-inlaw',_RL['brother-in-law']||'IN-LAW');
+      } else {
+        // sib-spouse
+        const _key2= _rootIsFemale&&_tgtIsFemale ? '_sibsp_rootF_tgtF'
+                   : _rootIsFemale&&_tgtIsMale ? '_sibsp_rootF_tgtM'
+                   : _rootIsMale&&_tgtIsFemale ? '_sibsp_rootM_tgtF'
+                   : _rootIsMale&&_tgtIsMale ? '_sibsp_rootM_tgtM'
+                   : null;
+        if(_key2&&_RL[_key2]) displayLabel=_RL[_key2];
+        else displayLabel=_genderLabel(id,'_sister-inlaw','_brother-inlaw',_RL['sib-spouse']||'IN-LAW');
+      }
+    }
+    p._roleLabel=displayLabel;
+    p._roleColor=roleColor(r);
+    p._roleFill=roleFill(r);
+    p._roleBorder=roleBorder(r);
+  });
+
+  // Build HTML
+  const nodeEls={};
+  gens.forEach(g=>{
+    const rowDiv=document.createElement('div');
+    rowDiv.style.cssText='display:flex;justify-content:center;align-items:flex-start;gap:18px;margin-bottom:70px;flex-wrap:nowrap';
+    byGen[g].forEach(id=>{
+      const p=rv_persons[id];
+      const wrap2=document.createElement('div');
+      wrap2.style.cssText='display:flex;flex-direction:column;align-items:center;gap:8px';
+
+      const card=document.createElement('div');
+      card.id='rvnd-'+id;
+      card.style.cssText=p.isRoot
+  ? 'background:linear-gradient(145deg,#FFF8E1,#FDF0C0);border:2.5px solid #C4A055;border-radius:12px;min-width:138px;max-width:162px;padding:10px 12px;box-shadow:0 0 0 4px rgba(196,160,85,0.2),0 4px 20px rgba(176,122,8,0.3);position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .15s'
+  : `background:${p._roleFill};border:1.5px solid ${p._roleBorder};border-radius:10px;min-width:128px;max-width:152px;padding:10px 12px;box-shadow:0 2px 10px rgba(80,48,8,0.09);position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .15s`;
+
+      if(p.isRoot){
+        // Gold shimmer top bar
+        const bar=document.createElement('div');
+        bar.style.cssText='position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#B07A08,#E8C060,#B07A08);border-radius:2px 2px 0 0';
+        card.appendChild(bar);
+        // Crown badge top-right
+        const crown=document.createElement('div');
+        crown.style.cssText='position:absolute;top:6px;right:7px;font-size:13px;line-height:1;filter:drop-shadow(0 1px 2px rgba(176,122,8,0.4))';
+        crown.textContent='👑';
+        card.appendChild(crown);
+      }
+
+      const rl=document.createElement('div');
+      rl.style.cssText=p.isRoot ? 'font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#A84818;margin-bottom:4px;margin-top:6px;text-shadow:0 1px 0 rgba(255,255,255,0.8)' : `font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${p._roleColor};margin-bottom:4px;margin-top:0`;
+      rl.textContent=p._roleLabel||'';
+      card.appendChild(rl);
+
+      const nm=document.createElement('div');
+      nm.style.cssText=p.isRoot ? 'font-size:14px;font-weight:700;color:#241406;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:138px' : 'font-size:13px;font-weight:500;color:#3A2010;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px';
+      nm.textContent=p.name.length>18?p.name.slice(0,17)+'…':p.name;
+      card.appendChild(nm);
+
+      const pts=[];if(p.dob)pts.push(p.dob);if(p.naksh)pts.push('✦ '+p.naksh);else if(p.city)pts.push(p.city);
+      if(pts.length){
+        const dt=document.createElement('div');
+        dt.style.cssText='font-size:10px;color:#B07A30;margin-top:3px';
+        dt.textContent=pts.join(' · ');card.appendChild(dt);
+      }
+
+      // Small + badge on hover (CSS)
+      const badge=document.createElement('div');
+      badge.style.cssText='position:absolute;bottom:5px;right:6px;width:18px;height:18px;border-radius:50%;background:rgba(176,122,8,0.12);border:1px solid rgba(176,122,8,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:#B07A08;font-weight:700;line-height:1;opacity:0.6';
+      badge.textContent='+';
+      card.appendChild(badge);
+      card.onmouseenter=()=>{card.style.boxShadow='0 4px 16px rgba(80,48,8,0.16)';card.style.transform='translateY(-1px)';badge.style.opacity='1'};
+      card.onmouseleave=()=>{card.style.boxShadow='0 2px 10px rgba(80,48,8,0.09)';card.style.transform='';badge.style.opacity='0.6'};
+      card.onclick=()=>rv_nodeMenu(id);
+      nodeEls[id]=card;
+      wrap2.appendChild(card);
+
+      // + button removed — tap node directly to add
+
+      rowDiv.appendChild(wrap2);
+    });
+    wrap.appendChild(rowDiv);
+  });
+
+  // Draw lines
+  requestAnimationFrame(()=>requestAnimationFrame(()=>rv_drawLines(nodeEls)));
+}
+
+function rv_drawLines(nodeEls){
+  const svg=document.getElementById('linesSvg');
+  const wrap=document.getElementById('treeWrap');
+  svg.innerHTML='';
+  const wr=wrap.getBoundingClientRect();
+
+  function pos(id){
+    const el=nodeEls[id];if(!el)return null;
+    const r=el.getBoundingClientRect();
+    return{
+      top:r.top-wr.top,bot:r.bottom-wr.top,
+      left:r.left-wr.left,right:r.right-wr.left,
+      cx:(r.left+r.right)/2-wr.left,
+      cy:(r.top+r.bottom)/2-wr.top,
+      w:r.width
+    };
+  }
+  svg.style.width=wrap.scrollWidth+'px';
+  svg.style.height=wrap.scrollHeight+'px';
+  function mk(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag)}
+
+  function curve(x1,y1,x2,y2,col){
+    const my=(y1+y2)/2,p=mk('path');
+    p.setAttribute('d',`M${x1} ${y1} C${x1} ${my} ${x2} ${my} ${x2} ${y2}`);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke',col||'rgba(176,122,8,0.4)');
+    p.setAttribute('stroke-width','1.5');
+    svg.appendChild(p);
+  }
+  function heart(x,y){
+    const t=mk('text');
+    t.setAttribute('x',x);t.setAttribute('y',y);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('dominant-baseline','central');
+    t.setAttribute('fill','rgba(176,122,8,0.65)');
+    t.setAttribute('font-size','13');
+    t.textContent='♥';svg.appendChild(t);
+  }
+  function bracket(lx,rx,ty){
+    const p=mk('path');
+    p.setAttribute('d',`M${lx} ${ty+14} L${lx} ${ty} L${rx} ${ty} L${rx} ${ty+14}`);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke','rgba(58,110,138,0.4)');
+    p.setAttribute('stroke-width','1.2');
+    p.setAttribute('stroke-dasharray','4 3');
+    svg.appendChild(p);
+  }
+
+  // ── RULE: only draw an edge if the two nodes are in genuinely
+  //    different rows (parent-child) or the SAME row (spouse/sibling).
+  //    Use a 40px threshold — nodes within 40px vertically = same row.
+  const SAME_ROW = 40;
+
+  // ── Parent → child curved lines ──────────────────────────────
+  // Key fix: only draw if parent IS visually above child (not same row,
+  // not reversed). This prevents grandparent→grandparent cross-lines.
+  rv_edges.filter(e=>e.t==='pc').forEach(e=>{
+    const par=pos(e.a), child=pos(e.b);
+    if(!par||!child) return;
+    // parent must be clearly above child
+    if(child.top - par.bot < 10) return;
+    curve(par.cx, par.bot, child.cx, child.top);
+  });
+
+  // ── Spouse lines ─────────────────────────────────────────────
+  // Key fix: ONLY draw between nodes that have a direct sp edge.
+  // Check they are in the same row AND directly adjacent (no other
+  // node between them that isn't their spouse).
+  const drawnSp=new Set();
+  rv_edges.filter(e=>e.t==='sp').forEach(e=>{
+    const key=[e.a,e.b].sort().join('-');
+    if(drawnSp.has(key))return; drawnSp.add(key);
+    const a=pos(e.a), b=pos(e.b);
+    if(!a||!b) return;
+    // Must be same row
+    if(Math.abs(a.cy-b.cy) > SAME_ROW) return;
+    const left=a.left<b.left?a:b, right=a.left<b.left?b:a;
+    const gap=right.left - left.right;
+    if(gap < 2) return; // overlapping, skip
+    // Draw short connector between the two specific nodes
+    const y=(left.cy+right.cy)/2;
+    const lx=left.right, rx=right.left;
+    // Line
+    const l=mk('line');
+    l.setAttribute('x1',lx);l.setAttribute('y1',y);
+    l.setAttribute('x2',rx);l.setAttribute('y2',y);
+    l.setAttribute('stroke','rgba(176,122,8,0.55)');
+    l.setAttribute('stroke-width','1.5');
+    l.setAttribute('stroke-dasharray','5 3');
+    svg.appendChild(l);
+    // Heart in centre
+    heart((lx+rx)/2, y);
+  });
+
+  // ── Sibling bracket ──────────────────────────────────────────
+  // Only between nodes that are siblings AND in the same row.
+  // Group all siblings of the same person together for one clean bracket.
+  const sibGroups=new Map(); // person → Set of siblings in same row
+  rv_edges.filter(e=>e.t==='sib').forEach(e=>{
+    const a=pos(e.a),b=pos(e.b);
+    if(!a||!b||Math.abs(a.top-b.top)>SAME_ROW) return;
+    if(!sibGroups.has(e.a)) sibGroups.set(e.a,new Set());
+    sibGroups.get(e.a).add(e.b);
+    if(!sibGroups.has(e.b)) sibGroups.set(e.b,new Set());
+    sibGroups.get(e.b).add(e.a);
+  });
+  // Find connected sibling clusters and draw one bracket per cluster
+  const placedSib=new Set();
+  sibGroups.forEach((sibs,id)=>{
+    if(placedSib.has(id)) return;
+    // BFS to find full cluster
+    const cluster=new Set([id]);
+    const q=[id];
+    while(q.length){
+      const cur=q.shift();
+      (sibGroups.get(cur)||new Set()).forEach(s=>{
+        if(!cluster.has(s)){cluster.add(s);q.push(s)}
+      });
+    }
+    cluster.forEach(x=>placedSib.add(x));
+    // Get positions of all cluster members
+    const poss=[...cluster].map(x=>pos(x)).filter(Boolean);
+    if(poss.length<2) return;
+    const lx=Math.min(...poss.map(p=>p.cx));
+    const rx=Math.max(...poss.map(p=>p.cx));
+    const ty=Math.min(...poss.map(p=>p.top))-3;
+    bracket(lx,rx,ty);
+  });
+}
+
+
+
+function mkS(tag,attrs={}){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+
+// ─── Confetti ─────────────────────────────────────────────
+function launchConfetti(){
+  const cols=['#C4A055','#D4A830','#3A7A28','#7EC060','#E8C060','#F0D88A','#C4781A'];
+  const rv=document.getElementById('reveal');
+  for(let i=0;i<50;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='cp';
+      const sz=5+Math.random()*8;
+      el.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;
+        background:${cols[Math.floor(Math.random()*cols.length)]};
+        transform:rotate(${Math.random()*360}deg);
+        animation-duration:${2.5+Math.random()*2}s;
+        animation-delay:${Math.random()*.4}s;`;
+      rv.appendChild(el);
+      setTimeout(()=>el.remove(),5500);
+    },i*22);
+  }
+}
+
+// ─── Share ────────────────────────────────────────────────
+function downloadPDF(){
+  const btn=document.getElementById('pdfBtn');
+  if(btn){btn.style.opacity='.5';btn.style.pointerEvents='none';}
+  showToast('Preparing PDF…');
+
+  // Load html2canvas dynamically then render
+  const script=document.createElement('script');
+  script.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+  script.onload=()=>_doPDF(btn);
+  script.onerror=()=>{showToast('Could not load PDF library. Try printing with Ctrl+P');if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}};
+  document.head.appendChild(script);
+}
+
+function _doPDF(btn){
+  const canvas=document.getElementById('tree-canvas');
+  const titleEl=document.getElementById('treeTitle');
+  const rootId=Object.keys(rv_persons).find(id=>rv_persons[id].isRoot);
+  const name=rootId?rv_persons[rootId].name:'Family';
+  const dateStr=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+
+  // Temporarily hide badges and interactive elements for clean capture
+  const toHide=canvas.querySelectorAll('button, [style*="opacity:0"]');
+  toHide.forEach(el=>el.style.visibility='hidden');
+
+  html2canvas(canvas,{
+    backgroundColor:'#FBF5E9',
+    scale:2,
+    useCORS:true,
+    scrollX:0, scrollY:0,
+    width:canvas.scrollWidth,
+    height:canvas.scrollHeight,
+    windowWidth:canvas.scrollWidth,
+    windowHeight:canvas.scrollHeight,
+    logging:false,
+  }).then(cvs=>{
+    // Restore hidden elements
+    toHide.forEach(el=>el.style.visibility='');
+
+    // Build print window with the captured image
+    const imgData=cvs.toDataURL('image/png');
+    const pw=window.open('','_blank','width=1200,height=900');
+    if(!pw){
+      // Fallback: download directly
+      const a=document.createElement('a');
+      a.download=name+'_Vansha_Vruksham.png';
+      a.href=imgData; a.click();
+      if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}
+      showToast('Downloaded as image!');
+      return;
+    }
+
+    const parts=[
+      '<!DOCTYPE html><html><head><meta charset="UTF-8">',
+      '<title>'+name+' — Vansha Vruksham<\/title>',
+      '<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">',
+      '<style>',
+      '*{box-sizing:border-box;margin:0;padding:0}',
+      'body{background:#FBF5E9;font-family:"DM Sans",sans-serif;color:#241406;display:flex;flex-direction:column;min-height:100vh}',
+      '.hdr{text-align:center;padding:18px 24px 14px;border-bottom:2px solid #DFC99E;flex-shrink:0}',
+      '.hdr h1{font-family:"Yeseva One",serif;font-size:1.5rem;color:#5A3310;margin-bottom:4px}',
+      '.hdr p{font-size:11.5px;color:#8C6B3E}',
+      '.tree-img{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}',
+      '.tree-img img{max-width:100%;height:auto;border-radius:8px}',
+      '.ftr{text-align:center;padding:12px;font-size:10.5px;color:#C8A870;border-top:1px solid #DFC99E;flex-shrink:0}',
+      '@media print{',
+      '  body{background:white}',
+      '  .hdr{padding:10px 16px}',
+      '  .tree-img{padding:8px}',
+      '  @page{margin:.5cm;size:A3 landscape}',
+      '}',
+      '<\/style><\/head><body>',
+      '<div class="hdr">',
+      '  <h1>🌳 '+name+' — Vansha Vruksham<\/h1>',
+      '  <p>Family Tree · Vanshavali · '+dateStr+'<\/p>',
+      '<\/div>',
+      '<div class="tree-img"><img src="'+imgData+'" alt="Family Tree"><\/div>',
+      '<div class="ftr">vanshavali.in · Your family, your roots, your story.<\/div>',
+      '<\/body><\/html>'
+    ];
+
+    pw.document.write(parts.join(''));
+    pw.document.close();
+
+    setTimeout(()=>{
+      try{pw.print();}catch(e){}
+      if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}
+      showToast('Print dialog opened!');
+    },600);
+  }).catch(err=>{
+    console.error('html2canvas error:',err);
+    toHide.forEach(el=>el.style.visibility='');
+    if(btn){btn.style.opacity='1';btn.style.pointerEvents='auto';}
+    showToast('PDF failed — try Ctrl+P to print');
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// ROOT SWITCHER
+// ══════════════════════════════════════════════════════════
+function openRootPanel(){
+  document.getElementById('rpSearch').value='';
+  buildRpList('');
+  document.getElementById('rootPanel').classList.add('open');
+}
+function closeRootPanel(){
+  document.getElementById('rootPanel').classList.remove('open');
+}
+function filterRpList(q){buildRpList(q)}
+function buildRpList(q){
+  const list=document.getElementById('rpList');
+  list.innerHTML='';
+  const rootId=Object.keys(rv_persons).find(id=>rv_persons[id].isRoot);
+  const all=Object.keys(rv_persons).filter(id=>{
+    const p=rv_persons[id];
+    if(!p.name||p.name==='?') return false;
+    if(q&&!p.name.toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  }).sort((a,b)=>rv_persons[a].name.localeCompare(rv_persons[b].name));
+  if(!all.length){
+    list.innerHTML='<div class="rp-empty">No people match your search</div>';return;
+  }
+  all.forEach(id=>{
+    const p=rv_persons[id];
+    const isCurrent=(id===rootId);
+    const div=document.createElement('div');
+    div.className='rp-item'+(isCurrent?' active':'');
+    const initials=p.name.trim().split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    div.innerHTML=
+      '<div class="rp-avatar">'+initials+'</div>'
+      +'<div style="flex:1;min-width:0">'
+        +'<div class="rp-name">'+p.name+'</div>'
+        +'<div class="rp-role-tag">'+(isCurrent?'Current primary':(p._roleLabel||'Family member'))+'</div>'
+      +'</div>'
+      +(isCurrent?'<span class="rp-check">✓</span>':'<span style="font-size:13px;color:#C8A870">›</span>');
+    if(!isCurrent) div.onclick=()=>switchRoot(id);
+    list.appendChild(div);
+  });
+}
+function switchRoot(newRootId){
+  Object.keys(rv_persons).forEach(id=>{delete rv_persons[id].isRoot});
+  rv_persons[newRootId].isRoot=true;
+  closeRootPanel();
+  renderReveal();
+  const name=rv_persons[newRootId].name;
+  document.getElementById('rvT').textContent='🌳 '+name+"'s Vansha Vruksham";
+  showToast('Switched to '+name);
+  saveTree();
+}
+
+function clearFpResult(){
+  const res=document.getElementById('fpResult');
+  const nop=document.getElementById('fpNoPath');
+  if(res) res.classList.remove('show');
+  if(nop) nop.classList.remove('show');
+}
+
+function openFindPanel(){
+  const from=document.getElementById('fpFrom');
+  const to=document.getElementById('fpTo');
+  from.innerHTML='<option value="">Select person...</option>';
+  to.innerHTML='<option value="">Select person...</option>';
+  const sorted=Object.keys(rv_persons)
+    .filter(id=>rv_persons[id].name&&rv_persons[id].name!=='?')
+    .sort((a,b)=>rv_persons[a].name.localeCompare(rv_persons[b].name));
+  sorted.forEach(id=>{
+    const p=rv_persons[id];
+    const label=p.name+(p._roleLabel?' — '+p._roleLabel:'');
+    const opt1=document.createElement('option');
+    opt1.value=id; opt1.textContent=label; from.appendChild(opt1);
+    const opt2=document.createElement('option');
+    opt2.value=id; opt2.textContent=label; to.appendChild(opt2);
+  });
+  clearFpResult();
+  document.getElementById('findPanel').classList.add('open');
+}
+function closeFindPanel(){document.getElementById('findPanel').classList.remove('open')}
+
+function findRelation(){
+  const fromId=document.getElementById('fpFrom').value;
+  const toId=document.getElementById('fpTo').value;
+  if(!fromId||!toId){showToast('Select both people');return}
+  if(fromId===toId){
+    document.getElementById('fpRelLabel').textContent='Same person!';
+    document.getElementById('fpPath').textContent='';
+    document.getElementById('fpResult').classList.add('show');
+    document.getElementById('fpNoPath').classList.remove('show');
+    return;
+  }
+  const path=findPath(fromId,toId);
+  if(!path){
+    document.getElementById('fpResult').classList.remove('show');
+    document.getElementById('fpNoPath').classList.add('show');
+    return;
+  }
+  const relLabel=pathToRelation(fromId,toId,path);
+  const pathDesc=pathToDescription(path);
+  document.getElementById('fpRelLabel').textContent=relLabel;
+  document.getElementById('fpPath').innerHTML=pathDesc;
+  // Icon based on closeness
+  const steps=path.length-1;
+  const icon=steps===1?'💑':steps===2?'👨‍👩‍👦':steps<=4?'🌿':'🌳';
+  document.querySelector('.fp-result-icon').textContent=icon;
+  document.getElementById('fpResult').classList.add('show');
+  document.getElementById('fpNoPath').classList.remove('show');
+}
+
+function findPath(startId,endId){
+  const visited=new Set([startId]);
+  const queue=[{id:startId,path:[{id:startId,edge:null,dir:null}]}];
+  while(queue.length){
+    const {id,path}=queue.shift();
+    if(id===endId) return path;
+    rv_edges.forEach(e=>{
+      let nextId=null,edgeType=null,dir=null;
+      if(e.a===id){nextId=e.b;edgeType=e.t;dir='fwd'}
+      else if(e.b===id){nextId=e.a;edgeType=e.t;dir='bwd'}
+      if(nextId&&!visited.has(nextId)){
+        visited.add(nextId);
+        queue.push({id:nextId,path:[...path,{id:nextId,edge:edgeType,dir,prevId:id}]});
+      }
+    });
+  }
+  return null;
+}
+
+function pathToRelation(fromId,toId,path){
+  // Run computeRoles from fromId's perspective without touching isRoot flags
+  const roles=computeRolesFrom(fromId);
+  const role=roles[toId]||'relative';
+  const MAP={
+    'you':'Same Person','spouse':'Husband / Wife',
+    'child':'Son / Daughter','grandchild':'Grandchild','great-gc':'Great-Grandchild',
+    'child-spouse':'Son-in-law / Daughter-in-law','child-spouse-sib':'Spouse Sibling',
+    'sibling':'Brother / Sister','sib-spouse':'Brother / Sister',
+    'brother-in-law':'Brother / Sister',
+    'nephew':'Nephew / Niece','nephew-sp':'Nephew Spouse','grandnephew':'Grand Nephew / Niece',
+    'father':'Father','mother':'Mother','parent':'Parent','parent-sp':'Step Parent',
+    'grandparent':'Grandparent','grandparent-spouse':'Grandparent Spouse',
+    'great-gp':'Great-Grandparent','great-uncle':'Great Uncle / Aunt',
+    'uncle':'Uncle / Aunt','uncle-sp':'Uncle Spouse',
+    'cousin':'Cousin','cousin-sp':'Cousin Spouse','cousin-child':'Cousin Child',
+    'in-law':'In-law','sib-in-law':'Sibling In-law',
+    'nephew-in-law':'Nephew In-law','gc-spouse':'Grandchild Spouse',
+    'relative':'Distant Relative',
+  };
+  return MAP[role]||(role.replace(/-/g,' ').replace(/\w/g,l=>l.toUpperCase()));
+}
+
+function pathToDescription(path){
+  const steps=[];
+  for(let i=1;i<path.length;i++){
+    const prev=rv_persons[path[i-1].id];
+    const curr=rv_persons[path[i].id];
+    const e=path[i];
+    let relWord='';
+    if(e.edge==='sp') relWord='married to';
+    else if(e.edge==='sib') relWord='sibling of';
+    else if(e.edge==='pc') relWord=e.dir==='bwd'?'parent of':'child of';
+    steps.push(
+      '<div class="fp-path-step">'
+      +'<div class="fp-step-dot"></div>'
+      +'<div><strong>'+curr.name+'</strong>'
+      +' <span class="fp-step-rel">is '+relWord+'</span> '
+      +prev.name+'</div>'
+      +'</div>'
+    );
+  }
+  return steps.join('');
+}
+
+
+// ── Standalone BFS role computer (used by Find Relation) ──
+function computeRolesFrom(startId){
+  const ids=Object.keys(rv_persons);
+  const roles={};
+  roles[startId]='you';
+  const visited=new Set([startId]);
+  const q=[{id:startId,role:'you'}];
+
+  const PROP={
+    'you':           {sp:'spouse',     ch:'child',       par:'parent',      sib:'sibling'},
+    'spouse':        {sp:null,         ch:'child',       par:'in-law',      sib:'brother-in-law'},
+    'sibling':       {sp:'sib-spouse', ch:'nephew',      par:'parent',      sib:'sibling'},
+    'sib-spouse':    {sp:null,         ch:'nephew',      par:'sib-in-law',  sib:'brother-in-law'},
+    'child':         {sp:'child-spouse',ch:'grandchild', par:'you',         sib:'sibling'},
+    'child-spouse':  {sp:null,         ch:'grandchild',  par:'in-law',      sib:'child-spouse-sib'},
+    'grandchild':    {sp:'gc-spouse',  ch:'great-gc',    par:'child',       sib:null},
+    'parent':        {sp:'parent-sp',  ch:'sibling',     par:'grandparent', sib:'uncle'},
+    'parent-sp':     {sp:null,         ch:'sibling',     par:'grandparent', sib:'uncle'},
+    'grandparent':   {sp:'grandparent-sp',ch:'parent',   par:'great-gp',    sib:'great-uncle'},
+    'uncle':         {sp:'uncle-sp',   ch:'cousin',      par:'grandparent', sib:null},
+    'nephew':        {sp:'nephew-sp',  ch:'grandnephew', par:'sibling',     sib:null},
+    'brother-in-law':{sp:'sib-spouse', ch:'nephew',par:'sib-in-law', sib:null},
+    'in-law':        {sp:null,         ch:'child-spouse',par:'grandparent-in-law',sib:null},
+  };
+
+  while(q.length){
+    const {id,role}=q.shift();
+    const rules=PROP[role]||{};
+
+    const addRel=(nid,relType)=>{
+      if(!nid||visited.has(nid)) return;
+      const r=rules[relType];
+      if(!r) return;
+      visited.add(nid);
+      const p=rv_persons[nid];
+      let finalRole=r;
+      if(r==='parent'||r==='parent-sp'){
+        if(p?.isMother===true) finalRole='mother';
+        else if(p?.isMother===false) finalRole='father';
+        else{
+          const spouses=rv_getSpouses(nid);
+          const spIsMother=spouses.some(sp=>rv_persons[sp]?.isMother===true);
+          const spIsFather=spouses.some(sp=>rv_persons[sp]?.isMother===false);
+          if(spIsMother) finalRole='father';
+          else if(spIsFather) finalRole='mother';
+          else finalRole='father';
+        }
+      }
+      roles[nid]=finalRole;
+      q.push({id:nid,role:(finalRole==='mother'||finalRole==='father')?'parent':finalRole});
+    };
+
+    rv_getSpouses(id).forEach(sp=>addRel(sp,'sp'));
+    rv_getChildren(id).forEach(ch=>addRel(ch,'ch'));
+    rv_getParents(id).forEach(par=>addRel(par,'par'));
+    rv_getSiblings(id).forEach(sib=>addRel(sib,'sib'));
+  }
+  ids.filter(id=>!roles[id]).forEach(id=>{roles[id]='relative'});
+  return roles;
+}
+
+// ── EXPORT — save tree as JSON file ──────────────────────
+function exportTree(){
+  try{
+    const data={
+      rv_persons, rv_edges, rv_nid, lang,
+      revealShown: true,
+      exportedAt: new Date().toISOString(),
+      version: '1.0'
+    };
+    const rootId=Object.keys(rv_persons).find(id=>rv_persons[id].isRoot);
+    const name=rootId?rv_persons[rootId].name.replace(/\s+/g,'_'):'family';
+    const json=JSON.stringify(data,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='vanshavali_'+name+'_'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();
+    showToast('💾 Backup saved!');
+  }catch(e){
+    showToast('Export failed: '+e.message);
+  }
+}
+
+// ── IMPORT — restore tree from JSON backup ────────────────
+function importTree(){
+  const input=document.createElement('input');
+  input.type='file';
+  input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.rv_persons||!Object.keys(data.rv_persons).length){
+          showToast('Invalid backup file');return;
+        }
+        rv_persons=data.rv_persons;
+        rv_edges=data.rv_edges||[];
+        rv_nid=data.rv_nid||100;
+        if(data.lang) lang=data.lang;
+        saveTree();
+        document.getElementById('reveal').classList.add('show');
+        document.getElementById('formScreen').style.display='none';
+        document.getElementById('langScreen').style.display='none';
+        renderReveal();
+        showToast('✅ Tree restored from backup!');
+      }catch(err){
+        showToast('Could not read backup: '+err.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function shareTree(){
+  const nm=rv_persons&&Object.keys(rv_persons).length
+    ? (rv_persons[Object.keys(rv_persons).find(id=>rv_persons[id].isRoot)]?.name||'My Family')
+    : (document.getElementById('you-name')?.value||'My Family');
+  const _token=new URLSearchParams(window.location.search).get('t');
+  const _base=window.location.origin;
+  const _url=_token ? _base+'/join.html?t='+_token : _base+'/join.html?fresh=1';
+  let _msg;
+  if(lang==='te') _msg='🌳 *'+nm+' వంశ వృక్షం*\n\nమా కుటుంబ వృక్షంలో చేరండి:\n👉 '+_url+'\n\n2 నిమిషాలు!';
+  else if(lang==='hi') _msg='🌳 *'+nm+' का वंश वृक्षम्*\n\nजुड़ें:\n👉 '+_url+'\n\nसिर्फ 2 मिनट!';
+  else _msg='🌳 *'+nm+"'s Vansha Vruksham*\n\nJoin our family tree:\n👉 "+_url+'\n\nTakes 2 minutes!';
+  window.open('https://wa.me/?text='+encodeURIComponent(_msg),'_blank');
+  showToast('Opening WhatsApp…');
+}
+
+// ─── Toast ────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ─── LocalStorage persistence ─────────────────────────────
+const LS_KEY = 'vanshavali_tree';
+
+function saveTree(){
+  // Save to localStorage immediately (fast, offline backup)
+  try {
+    const data = {
+      rv_persons, rv_edges, rv_nid,
+      lang,
+      revealShown: Object.keys(rv_persons).length > 0,
+      form: {}
+    };
+    // Save all named form inputs
+    ['you','spouse','father','mother','dadaji','dadiji','nanaji','naniji'].forEach(id=>{
+      ['name','dob','city','gotra','naksh','notes'].forEach(f=>{
+        const el=document.getElementById(id+'-'+f);
+        if(el) data.form[id+'-'+f]=el.value;
+      });
+    });
+    // Save siblings and kids counts
+    data.sibCount=sibCount; data.kidCount=kidCount;
+    for(let i=1;i<=sibCount;i++){
+      ['name','dob','city'].forEach(f=>{
+        const el=document.getElementById('sib'+i+'-'+f);
+        if(el) data.form['sib'+i+'-'+f]=el.value;
+      });
+    }
+    for(let i=1;i<=kidCount;i++){
+      ['name','dob','city'].forEach(f=>{
+        const el=document.getElementById('kid'+i+'-'+f);
+        if(el) data.form['kid'+i+'-'+f]=el.value;
+      });
+    }
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch(e){ console.log('Save failed', e); }
+
+  // Also save to Neon DB if we have a tree token (non-blocking)
+  const _t = new URLSearchParams(window.location.search).get('t');
+  if(_t && Object.keys(rv_persons).length > 0){
+    fetch('/api/tree/save', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({token:_t, rv_persons, rv_edges, rv_nid, lang})
+    }).catch(e=>console.warn('Cloud save failed:', e.message));
+  }
+}
+
+function loadTree(){
+  try {
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    const data=JSON.parse(raw);
+    if(!data.rv_persons||!Object.keys(data.rv_persons).length) return false;
+
+    // Restore graph state
+    rv_persons=data.rv_persons||{};
+    rv_edges=data.rv_edges||[];
+    rv_nid=data.rv_nid||100;
+
+    // Restore language
+    if(data.lang) lang=data.lang;
+
+    // Restore form fields
+    if(data.form){
+      Object.entries(data.form).forEach(([id,val])=>{
+        const el=document.getElementById(id);
+        if(el) el.value=val||'';
+      });
+    }
+
+    // Restore sibling/kid cards
+    if(data.sibCount>0){
+      for(let i=1;i<=data.sibCount;i++) addSibling();
+      // Re-fill sibling fields
+      if(data.form){
+        Object.entries(data.form).forEach(([id,val])=>{
+          const el=document.getElementById(id);
+          if(el) el.value=val||'';
+        });
+      }
+    }
+    if(data.kidCount>0){
+      for(let i=1;i<=data.kidCount;i++) addKid();
+      if(data.form){
+        Object.entries(data.form).forEach(([id,val])=>{
+          const el=document.getElementById(id);
+          if(el) el.value=val||'';
+        });
+      }
+    }
+
+    return {lang: data.lang||'en', revealShown: data.revealShown||false};
+  } catch(e){ console.error('[Vanshavali] loadTree failed:',e); return false; }
+}
+
+function clearTree(){
+  localStorage.removeItem(LS_KEY);
+  rv_persons={}; rv_edges=[]; rv_nid=100;
+  location.reload();
+}
+
+// ─── Init ─────────────────────────────────────────────────
+// Try to restore saved tree first
+// ── Init: restore saved tree or show language picker ──
+const _urlParams = new URLSearchParams(window.location.search);
+const _forceFresh = _urlParams.get('fresh') === '1';
+const _treeToken = _urlParams.get('t');
+
+async function _init(){
+  let _restored = false;
+
+  if(_forceFresh){
+    // Coming from landing page — always show form
+    _restored = false;
+  } else if(_treeToken){
+    // Have a tree token — load from Neon DB first
+    _restored = await loadTreeFromAPI(_treeToken);
+    if(!_restored) _restored = loadTree(); // fallback to localStorage
+  } else {
+    // No token — try localStorage
+    _restored = loadTree();
+  }
+
+  const _hasGraph = Object.keys(rv_persons).length > 0;
+
+  if(!_forceFresh && _restored && _hasGraph){
+  // We have a saved tree — go straight to reveal
+  lang = (typeof _restored === 'object' ? _restored.lang : _restored) || 'en';
+
+  // Hide everything except the reveal
+  document.getElementById('langScreen').style.display='none';
+  document.getElementById('formScreen').style.display='none';
+  const _sb=document.getElementById('stickyBar');
+  if(_sb) _sb.style.display='none';
+  document.getElementById('reveal').classList.add('show');
+
+  // Render the tree — do this first before anything else
+  setTimeout(()=>{
+    try{
+      // Apply language safely
+      try{ applyLang(); }catch(e){ console.warn('[Vanshavali] applyLang error:',e); }
+      renderReveal();
+      showToast('🌳 Tree restored');
+    }catch(e){
+      console.error('[Vanshavali] restore error:',e);
+      // Fallback: show form so user can at least do something
+      document.getElementById('reveal').classList.remove('show');
+      document.getElementById('formScreen').style.display='block';
+      const _sb3=document.getElementById('stickyBar');
+      if(_sb3) _sb3.style.display='flex';
+      showToast('Tree could not render — please rebuild');
+    }
+  }, 100);
+
+  // Add "Start fresh" link in the reveal subtitle
+  setTimeout(()=>{
+    const rvS=document.getElementById('rvS');
+    if(rvS) rvS.innerHTML='Restored · <span onclick="closeReveal()" style="color:#5A3310;cursor:pointer;text-decoration:underline;font-weight:500;margin-right:10px">Edit form</span><span onclick="clearTree()" style="color:#A84818;cursor:pointer;text-decoration:underline;font-weight:500">Start fresh</span>';
+  }, 200);
+
+} else if(_restored && !_hasGraph){
+  // Saved form data only (no graph yet) — go to form
+  lang = (typeof _restored === 'object' ? _restored.lang : _restored) || 'en';
+  document.getElementById('langScreen').style.display='none';
+  document.getElementById('formScreen').style.display='block';
+  const _sb2=document.getElementById('stickyBar');
+  if(_sb2) _sb2.style.display='flex';
+  const _cb=document.getElementById('changeLangBtn');
+  if(_cb) _cb.style.display='block';
+  applyLang();
+  updateCounts();
+
+  } else {
+    // Fresh start — show language picker
+    document.getElementById('langScreen').style.display='flex';
+  }
+}
+_init(); // kick off async init
+</script>
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vanshavali — Invite Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FBF6EE;--ink:#1A140A;--bark:#4A3520;
+  --gold:#C8920A;--gold-light:#F0C84A;--gold-dim:rgba(200,146,10,0.13);
+  --leaf:#2C6B3A;--leaf-dim:rgba(44,107,58,0.1);
+  --muted:#8A7A68;--border:rgba(74,53,32,0.13);
+  --surface:rgba(255,255,255,0.72);
+  --danger:#B03030;--wa:#25D366;
+}
+html{background:var(--cream);min-height:100vh}
+body{
+  font-family:'DM Sans',sans-serif;font-weight:300;color:var(--ink);
+  min-height:100vh;background:var(--cream);
+  background-image:
+    radial-gradient(ellipse at 15% 8%,rgba(200,146,10,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 88% 82%,rgba(44,107,58,0.06) 0%,transparent 50%);
+}
+
+/* ── HEADER ── */
+header{
+  padding:18px 20px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  background:rgba(251,246,238,0.96);backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:50;
+}
+.logo{font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--ink)}
+.logo em{color:var(--gold);font-style:italic}
+.hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tree-owner{font-size:12px;color:var(--muted)}
+
+/* ── STEPS ── */
+.steps{display:flex;border-bottom:1px solid var(--border);background:rgba(251,246,238,0.85)}
+.step{
+  flex:1;padding:11px 6px;text-align:center;
+  font-size:10.5px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase;
+  color:var(--muted);border-bottom:2px solid transparent;transition:all .25s;
+}
+.step.active{color:var(--gold);border-bottom-color:var(--gold)}
+.step.done{color:var(--leaf);border-bottom-color:var(--leaf)}
+.snum{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;font-size:9px;
+  border:1.5px solid currentColor;margin-right:4px;
+}
+
+/* ── PANELS ── */
+.panel{display:none;padding:20px;max-width:560px;margin:0 auto;padding-bottom:100px}
+.panel.active{display:block;animation:fadeUp .22s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+h2{font-family:'Lora',serif;font-size:1.3rem;font-weight:600;line-height:1.25;color:var(--ink);margin-bottom:5px}
+h2 em{font-style:italic;color:var(--gold)}
+.sub{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+
+/* ── IMPORT CARD ── */
+.import-card{
+  border:1.5px dashed var(--border);border-radius:11px;padding:18px;
+  text-align:center;margin-bottom:16px;background:var(--surface);
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.import-card:active{background:var(--gold-dim)}
+.import-card:hover{border-color:var(--gold)}
+.import-icon{font-size:1.8rem;margin-bottom:6px}
+.import-label{font-size:13px;font-weight:500;color:var(--bark);margin-bottom:2px}
+.import-note{font-size:11px;color:var(--muted)}
+
+.divider-or{
+  display:flex;align-items:center;gap:10px;
+  font-size:10.5px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;
+  margin:14px 0;
+}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── MANUAL ADD ROW ── */
+.manual-row{display:flex;gap:7px;margin-bottom:18px}
+input[type=text],input[type=tel]{
+  flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;background:white;color:var(--ink);
+  outline:none;transition:border-color .2s;min-width:0;
+}
+input:focus{border-color:var(--gold)}
+input::placeholder{color:var(--muted)}
+.add-btn{
+  padding:10px 14px;border-radius:8px;background:var(--gold);color:white;border:none;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s;
+}
+.add-btn:hover{background:#A87A08}
+
+/* ── CONTACT CARDS ── */
+.clist{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.ccard{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:13px 13px 13px 13px;
+  display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:start;
+  animation:slideIn .18s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:none}}
+.av{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid rgba(200,146,10,0.18);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lora',serif;font-size:.95rem;font-weight:600;color:var(--gold);flex-shrink:0;
+}
+.cinfo{min-width:0}
+.cname{font-weight:500;font-size:13.5px;color:var(--ink);margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cphone{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.cfields{display:flex;flex-direction:column;gap:5px}
+.frow{display:flex;align-items:center;gap:7px}
+.flabel{font-size:10.5px;color:var(--muted);width:64px;flex-shrink:0;text-align:right}
+select,.sinput{
+  flex:1;padding:6px 9px;border:1px solid var(--border);border-radius:6px;
+  font-family:'DM Sans',sans-serif;font-size:12px;background:white;color:var(--ink);
+  outline:none;transition:border-color .2s;min-width:0;
+}
+select:focus,.sinput:focus{border-color:var(--gold)}
+textarea.notes{
+  width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:6px;
+  font-family:'DM Sans',sans-serif;font-size:11.5px;background:white;color:var(--ink);
+  resize:none;height:46px;outline:none;transition:border-color .2s;
+}
+textarea.notes:focus{border-color:var(--gold)}
+textarea.notes::placeholder,.sinput::placeholder{color:var(--muted)}
+.xbtn{
+  width:26px;height:26px;border-radius:6px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;flex-shrink:0;transition:all .2s;align-self:center;
+}
+.xbtn:hover{border-color:var(--danger);color:var(--danger);background:rgba(176,48,48,0.05)}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:32px 16px;border:1.5px dashed var(--border);
+  border-radius:11px;margin-bottom:16px}
+.empty-i{font-size:1.8rem;opacity:.4;margin-bottom:6px}
+.empty-t{font-size:12.5px;color:var(--muted)}
+
+/* ── STICKY BAR ── */
+.sticky-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(251,246,238,0.97);border-top:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(10px);z-index:40;max-width:100%;
+}
+.cbadge{
+  background:var(--gold);color:white;border-radius:100px;
+  padding:2px 9px;font-size:11.5px;font-weight:500;flex-shrink:0;
+}
+.bar-text{font-size:12px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden}
+.bar-btn{
+  padding:10px 18px;border-radius:8px;background:var(--ink);color:white;border:none;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  cursor:pointer;flex-shrink:0;transition:background .2s;
+}
+.bar-btn:hover{background:var(--bark)}
+.bar-btn:disabled{background:var(--muted);cursor:not-allowed}
+
+/* ── SEND PANEL ── */
+/* Select-all row */
+.sel-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;margin-bottom:10px;
+}
+.sel-label{font-size:12.5px;font-weight:500;color:var(--bark)}
+.sel-count{font-size:11.5px;color:var(--muted)}
+.sel-actions{display:flex;gap:8px}
+.sel-link{font-size:11.5px;color:var(--gold);cursor:pointer;font-weight:500;
+  background:none;border:none;padding:0;font-family:'DM Sans',sans-serif}
+.sel-link:hover{color:var(--bark)}
+
+/* Invite rows */
+.ilist{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.irow{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:12px 13px;display:flex;align-items:center;gap:11px;
+  transition:border-color .2s,background .2s;
+}
+.irow.checked{border-color:rgba(200,146,10,0.3);background:var(--gold-dim)}
+.irow.sent{border-color:rgba(44,107,58,0.3);background:var(--leaf-dim)}
+.irow.skip{opacity:.45}
+
+/* Custom checkbox */
+.cb-wrap{flex-shrink:0;cursor:pointer}
+.cb-wrap input[type=checkbox]{display:none}
+.cb-box{
+  width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);
+  background:white;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-size:12px;
+}
+.cb-wrap input:checked + .cb-box{background:var(--gold);border-color:var(--gold);color:white}
+.irow.sent .cb-box{background:var(--leaf);border-color:var(--leaf);color:white}
+.irow.sent .cb-box::after{content:'✓'}
+
+.iav{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid rgba(200,146,10,0.18);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lora',serif;font-size:.9rem;font-weight:600;color:var(--gold);flex-shrink:0;
+}
+.irow.sent .iav{background:var(--leaf-dim);color:var(--leaf);border-color:rgba(44,107,58,0.2)}
+
+.iinfo{flex:1;min-width:0}
+.iname{font-weight:500;font-size:13.5px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.irel{font-size:11.5px;color:var(--muted)}
+.inotes{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+
+.istatus{flex-shrink:0;font-size:11px;font-weight:500}
+.istatus.pending{color:var(--muted)}
+.istatus.sending{color:var(--gold)}
+.istatus.sent{color:var(--leaf)}
+.istatus.skipped{color:var(--muted)}
+
+/* Send bar */
+.send-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(251,246,238,0.97);border-top:1px solid var(--border);
+  padding:12px 20px 14px;backdrop-filter:blur(10px);z-index:40;
+}
+.send-main-btn{
+  width:100%;padding:13px;border-radius:9px;
+  background:var(--wa);color:white;border:none;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:9px;
+}
+.send-main-btn:hover{background:#1EAD52}
+.send-main-btn:disabled{background:var(--muted);cursor:not-allowed}
+.prog-row{display:flex;align-items:center;gap:10px}
+.prog-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--leaf);border-radius:2px;transition:width .35s ease}
+.prog-label{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+/* ── DONE ── */
+.done-wrap{text-align:center;padding:40px 16px}
+.done-icon{font-size:3rem;margin-bottom:14px;animation:pop .4s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.done-title{font-family:'Lora',serif;font-size:1.4rem;font-weight:600;margin-bottom:6px}
+.done-sub{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:22px}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center}
+.sval{font-family:'Lora',serif;font-size:1.7rem;font-weight:700;color:var(--gold)}
+.slbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.again-btn{
+  width:100%;padding:13px;border-radius:9px;background:var(--ink);color:white;border:none;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;
+}
+
+/* ── NOTICE ── */
+.notice{
+  background:rgba(200,146,10,0.07);border:1px solid rgba(200,146,10,0.2);
+  border-radius:8px;padding:11px 13px;margin-bottom:14px;
+  font-size:12px;color:var(--bark);line-height:1.6;display:none;
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:white;padding:9px 18px;border-radius:8px;
+  font-size:12.5px;opacity:0;transition:all .25s;pointer-events:none;z-index:200;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* iOS notice */
+.ios-notice{
+  background:rgba(200,146,10,0.07);border:1px solid rgba(200,146,10,0.2);
+  border-radius:8px;padding:11px 13px;margin-bottom:14px;
+  font-size:12px;color:var(--bark);line-height:1.6;display:none;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌳 Vansh<em>avali</em></div>
+  <a href="join.html" style="margin-left:auto;font-size:12px;color:#8C6B3E;text-decoration:none;background:#F4EAD5;border:1px solid #DFC99E;padding:5px 12px;border-radius:5px">← My Tree</a>
+  <div class="hright">
+    <span class="tree-owner">Kavitha's Tree</span>
+  </div>
+</header>
+
+<div class="steps">
+  <div class="step active" id="s1"><span class="snum">1</span>Add</div>
+  <div class="step" id="s2"><span class="snum">2</span>Select</div>
+  <div class="step" id="s3"><span class="snum">3</span>Done</div>
+</div>
+
+<!-- ═══════════════ PANEL 1: ADD ═══════════════ -->
+<div class="panel active" id="p1">
+  <h2>Add family <em>members</em></h2>
+  <p class="sub">Import from your contacts or type them in. Add whatever you know — you can always fill more later.</p>
+
+  <div class="ios-notice" id="iosNotice">
+    📱 Contact picker not available — add people manually using their name and WhatsApp number.
+  </div>
+
+  <div class="import-card" id="importBtn" onclick="pickContacts()">
+    <div class="import-icon">📱</div>
+    <div class="import-label">Browse & import phone contacts</div>
+    <div class="import-note">Select one, a few, or tap "Select All" in the picker</div>
+  </div>
+
+  <div class="divider-or">or add manually</div>
+
+  <div class="manual-row">
+    <input type="text" id="mname" placeholder="Name" autocomplete="off"/>
+    <input type="tel" id="mphone" placeholder="+91 98765…" autocomplete="off"/>
+    <button class="add-btn" onclick="addManual()">+ Add</button>
+  </div>
+
+  <div class="clist" id="clist"></div>
+
+  <div class="empty" id="emptyState">
+    <div class="empty-i">🌱</div>
+    <div class="empty-t">No one added yet.<br>Import contacts or add manually above.</div>
+  </div>
+
+  <div style="height:80px"></div>
+</div>
+
+<!-- ═══════════════ PANEL 2: SELECT & SEND ═══════════════ -->
+<div class="panel" id="p2">
+  <h2>Send <em>invites</em></h2>
+  <p class="sub">Check the people you want to invite now. Uncheck anyone to skip. Tap Send — your WhatsApp opens for each one, message already written.</p>
+
+  <div class="sel-row">
+    <div>
+      <div class="sel-label" id="selLabel">Select who to invite</div>
+      <div class="sel-count" id="selCount">0 selected</div>
+    </div>
+    <div class="sel-actions">
+      <button class="sel-link" onclick="selectAll()">Select all</button>
+      <button class="sel-link" onclick="selectNone()">Clear</button>
+    </div>
+  </div>
+
+  <div class="ilist" id="ilist"></div>
+
+  <div style="height:100px"></div>
+</div>
+
+<!-- ═══════════════ PANEL 3: DONE ═══════════════ -->
+<div class="panel" id="p3">
+  <div class="done-wrap">
+    <div class="done-icon">🌳</div>
+    <div class="done-title">Invites sent!</div>
+    <div class="done-sub">Family members will receive a personal link to join your tree. Once they tap it, they'll appear on the tree and can invite their own relatives.</div>
+    <div class="stats">
+      <div class="sbox"><div class="sval" id="dSent">0</div><div class="slbl">Sent</div></div>
+      <div class="sbox"><div class="sval" id="dSkip">0</div><div class="slbl">Skipped</div></div>
+      <div class="sbox"><div class="sval" id="dTotal">0</div><div class="slbl">Total</div></div>
+    </div>
+    <button class="again-btn" onclick="resetAll()">Invite more family →</button>
+  </div>
+</div>
+
+<!-- Sticky bars (swapped by JS) -->
+<div class="sticky-bar" id="bar1">
+  <span class="cbadge" id="badge">0</span>
+  <span class="bar-text" id="barText">people added</span>
+  <button class="bar-btn" id="proceedBtn" onclick="goToSend()" disabled>Next →</button>
+</div>
+
+<div class="send-bar" id="bar2" style="display:none">
+  <button class="send-main-btn" id="sendMainBtn" onclick="sendNext()" disabled>
+    <span>🟢</span> <span id="sendBtnLabel">Send invites on WhatsApp</span>
+  </button>
+  <div class="prog-row">
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <span class="prog-label" id="progLabel">0 / 0 sent</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Constants ─────────────────────────────────────────────
+const RELS = [
+  '',
+  'Father','Mother','Son','Daughter','Brother','Sister','Spouse',
+  'Grandfather (Dada)','Grandmother (Dadi)',
+  'Grandfather (Nana)','Grandmother (Nani)',
+  'Uncle (Chacha)','Aunt (Chachi)',
+  'Uncle (Mama)','Aunt (Mami)',
+  'Uncle (Taya / Thaya)','Aunt (Tayi)',
+  'Uncle (Fufa)','Aunt (Bua)',
+  'Cousin (Bhai)','Cousin (Behen)',
+  'Nephew','Niece',
+  'Father-in-law','Mother-in-law',
+  'Brother-in-law (Devar/Jija)','Sister-in-law (Devrani/Nanad)',
+  'Son-in-law','Daughter-in-law',
+  'Other'
+];
+
+// ─── State ─────────────────────────────────────────────────
+let contacts = [];   // { id, name, phone, relation, dob, gotra, notes }
+let sendQueue = [];  // indices into contacts[] to send
+let sendIdx = 0;     // current position in sendQueue
+let sentCount = 0;
+
+// ─── Contact Picker ────────────────────────────────────────
+async function pickContacts() {
+  if (!('contacts' in navigator)) {
+    document.getElementById('iosNotice').style.display = 'block';
+    document.getElementById('importBtn').style.display = 'none';
+    showToast('Use manual add below');
+    return;
+  }
+  try {
+    const picked = await navigator.contacts.select(['name','tel'], { multiple: true });
+    if (!picked || !picked.length) return;
+    let added = 0;
+    picked.forEach(c => {
+      const name = c.name?.[0]?.trim() || '';
+      const phone = c.tel?.[0]?.replace(/\s+/g,'').trim() || '';
+      if (!name && !phone) return;
+      if (phone && contacts.find(x => x.phone === phone)) return;
+      addContact(name, phone);
+      added++;
+    });
+    showToast(`${added} contact${added !== 1 ? 's' : ''} imported`);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Could not open contacts');
+  }
+}
+
+// ─── Manual add ────────────────────────────────────────────
+function addManual() {
+  const name = document.getElementById('mname').value.trim();
+  const phone = document.getElementById('mphone').value.trim();
+  if (!name && !phone) { showToast('Enter a name or number'); return; }
+  if (phone && contacts.find(x => x.phone === phone)) { showToast('Already added'); return; }
+  addContact(name, phone);
+  document.getElementById('mname').value = '';
+  document.getElementById('mphone').value = '';
+  document.getElementById('mname').focus();
+}
+document.getElementById('mname').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('mphone').focus(); });
+document.getElementById('mphone').addEventListener('keydown', e => { if(e.key==='Enter') addManual(); });
+
+// ─── Core helpers ──────────────────────────────────────────
+function addContact(name, phone) {
+  contacts.push({ id: Date.now()+Math.random(), name, phone, relation:'', dob:'', gotra:'', notes:'' });
+  renderPanel1();
+  updateBar1();
+}
+
+function removeContact(id) {
+  contacts = contacts.filter(c => c.id != id);
+  renderPanel1();
+  updateBar1();
+}
+
+function setField(id, field, val) {
+  const c = contacts.find(x => x.id == id);
+  if (c) c[field] = val;
+}
+
+// ─── Render panel 1 ────────────────────────────────────────
+function renderPanel1() {
+  const list = document.getElementById('clist');
+  const empty = document.getElementById('emptyState');
+  if (!contacts.length) { list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  list.innerHTML = contacts.map(c => `
+    <div class="ccard">
+      <div class="av">${c.name ? c.name[0].toUpperCase() : '?'}</div>
+      <div class="cinfo">
+        <div class="cname">${esc(c.name || '(no name)')}</div>
+        <div class="cphone">${c.phone || 'No number'}</div>
+        <div class="cfields">
+          <div class="frow">
+            <span class="flabel">Relation</span>
+            <select onchange="setField(${c.id},'relation',this.value)">
+              ${RELS.map(r=>`<option value="${r}" ${c.relation===r?'selected':''}>${r||'— select —'}</option>`).join('')}
+            </select>
+          </div>
+          <div class="frow">
+            <span class="flabel">Birth year</span>
+            <input class="sinput" type="text" maxlength="4" placeholder="e.g. 1948"
+              value="${c.dob}" onchange="setField(${c.id},'dob',this.value)"/>
+          </div>
+          <div class="frow">
+            <span class="flabel">Gotra</span>
+            <input class="sinput" type="text" placeholder="optional"
+              value="${c.gotra}" onchange="setField(${c.id},'gotra',this.value)"/>
+          </div>
+          <div class="frow" style="align-items:flex-start">
+            <span class="flabel" style="padding-top:7px">Notes</span>
+            <textarea class="notes" placeholder="Village, profession, nickname — anything you know…"
+              onchange="setField(${c.id},'notes',this.value)">${esc(c.notes)}</textarea>
+          </div>
+        </div>
+      </div>
+      <button class="xbtn" onclick="removeContact(${c.id})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function updateBar1() {
+  const n = contacts.length;
+  document.getElementById('badge').textContent = n;
+  document.getElementById('barText').textContent = n === 1 ? 'person added' : 'people added';
+  document.getElementById('proceedBtn').disabled = n === 0;
+}
+
+// ─── Go to send panel ──────────────────────────────────────
+function goToSend() {
+  if (!contacts.length) return;
+  // Flush any in-DOM edits
+  contacts.forEach(c => {
+    const card = document.querySelector(`[data-id="${c.id}"]`);
+    if (!card) return;
+    const sel = card.querySelector('select'); if (sel) c.relation = sel.value;
+    const ins = card.querySelectorAll('input.sinput');
+    if (ins[0]) c.dob = ins[0].value;
+    if (ins[1]) c.gotra = ins[1].value;
+    const ta = card.querySelector('textarea'); if (ta) c.notes = ta.value;
+  });
+
+  sentCount = 0;
+  renderPanel2();
+  showPanel(2);
+  document.getElementById('bar1').style.display = 'none';
+  document.getElementById('bar2').style.display = 'block';
+  updateSendBar();
+}
+
+// ─── Render panel 2 ────────────────────────────────────────
+function renderPanel2() {
+  const list = document.getElementById('ilist');
+  list.innerHTML = contacts.map((c, i) => `
+    <div class="irow checked" id="ir-${i}">
+      <label class="cb-wrap">
+        <input type="checkbox" checked id="cb-${i}" onchange="toggleCheck(${i})"/>
+        <div class="cb-box">✓</div>
+      </label>
+      <div class="iav" id="iav-${i}">${c.name ? c.name[0].toUpperCase() : '?'}</div>
+      <div class="iinfo">
+        <div class="iname">${esc(c.name || '(no name)')}</div>
+        <div class="irel">${c.relation || 'Family member'}${c.phone ? ' · '+c.phone : ''}</div>
+        ${c.notes ? `<div class="inotes">"${esc(c.notes)}"</div>` : ''}
+      </div>
+      <div class="istatus pending" id="ist-${i}">Pending</div>
+    </div>
+  `).join('');
+  updateSelCount();
+}
+
+function toggleCheck(i) {
+  const cb = document.getElementById('cb-'+i);
+  const row = document.getElementById('ir-'+i);
+  row.classList.toggle('checked', cb.checked);
+  row.classList.toggle('skip', !cb.checked);
+  const st = document.getElementById('ist-'+i);
+  st.className = 'istatus ' + (cb.checked ? 'pending' : 'skipped');
+  st.textContent = cb.checked ? 'Pending' : 'Skipped';
+  updateSelCount();
+  updateSendBar();
+}
+
+function selectAll() {
+  contacts.forEach((_, i) => {
+    const cb = document.getElementById('cb-'+i);
+    if (!cb || document.getElementById('ist-'+i).textContent === 'Sent') return;
+    cb.checked = true;
+    toggleCheck(i);
+  });
+}
+
+function selectNone() {
+  contacts.forEach((_, i) => {
+    const cb = document.getElementById('cb-'+i);
+    if (!cb || document.getElementById('ist-'+i).textContent === 'Sent') return;
+    cb.checked = false;
+    toggleCheck(i);
+  });
+}
+
+function updateSelCount() {
+  const sel = contacts.filter((_, i) => {
+    const cb = document.getElementById('cb-'+i);
+    return cb && cb.checked;
+  }).length;
+  document.getElementById('selCount').textContent = `${sel} selected`;
+  document.getElementById('selLabel').textContent = sel === contacts.length
+    ? 'Everyone selected' : `Select who to invite`;
+}
+
+// ─── Sending logic ─────────────────────────────────────────
+function buildSendQueue() {
+  return contacts.reduce((q, c, i) => {
+    const cb = document.getElementById('cb-'+i);
+    const st = document.getElementById('ist-'+i);
+    if (cb && cb.checked && st && st.textContent !== 'Sent') q.push(i);
+    return q;
+  }, []);
+}
+
+function updateSendBar() {
+  const queue = buildSendQueue();
+  const btn = document.getElementById('sendMainBtn');
+  const lbl = document.getElementById('sendBtnLabel');
+  if (!queue.length) {
+    btn.disabled = true;
+    lbl.textContent = 'No one selected';
+    return;
+  }
+  btn.disabled = false;
+  const next = contacts[queue[0]];
+  lbl.textContent = `Send to ${next.name || 'next person'} (${sentCount+queue.length} left)`;
+}
+
+function sendNext() {
+  const queue = buildSendQueue();
+  if (!queue.length) { finishSending(); return; }
+  const i = queue[0];
+  const c = contacts[i];
+
+  // Mark as "Sending…"
+  const st = document.getElementById('ist-'+i);
+  const row = document.getElementById('ir-'+i);
+  st.className = 'istatus sending';
+  st.textContent = 'Opening…';
+
+  // Build unique token (in production: call your API first)
+  const token = Math.random().toString(36).substring(2,10);
+  const phone = c.phone ? c.phone.replace(/[^0-9]/g,'') : '';
+  const rel = c.relation || 'family member';
+  const name = c.name || 'aap';
+
+  const msg =
+    `🌳 *Vanshavali* — Hamara Parivar Tree\n\n` +
+    `${name}, aapko hamare family tree mein add kiya gaya hai!\n\n` +
+    `Aap hamare *${rel}* hain 🙏\n\n` +
+    `Apni details confirm karein aur apne family members add karein:\n` +
+    `👉 https://vanshavali.in/join/${token}\n\n` +
+    `Sirf 2 minute. Koi app download nahi!`;
+
+  const url = phone
+    ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+    : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+  window.open(url, '_blank');
+
+  // Mark sent after user returns (listen for visibility)
+  const markSent = () => {
+    if (!document.hidden) {
+      document.removeEventListener('visibilitychange', markSent);
+      markRowSent(i);
+    }
+  };
+  document.addEventListener('visibilitychange', markSent);
+
+  // Fallback: mark after 3s regardless
+  setTimeout(() => {
+    document.removeEventListener('visibilitychange', markSent);
+    markRowSent(i);
+  }, 3000);
+}
+
+function markRowSent(i) {
+  const st = document.getElementById('ist-'+i);
+  const row = document.getElementById('ir-'+i);
+  const cb = document.getElementById('cb-'+i);
+  const av = document.getElementById('iav-'+i);
+  if (!st || !row) return;
+
+  // Already marked?
+  if (st.textContent === 'Sent') return;
+
+  st.className = 'istatus sent';
+  st.textContent = 'Sent';
+  row.classList.remove('checked');
+  row.classList.add('sent');
+  if (cb) cb.checked = false;
+  if (av) av.style.background = 'var(--leaf-dim)';
+  sentCount++;
+
+  // Progress
+  const total = contacts.length;
+  const pct = (sentCount / total) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = `${sentCount} / ${total} sent`;
+
+  // Update send button for next
+  const queue = buildSendQueue();
+  const btn = document.getElementById('sendMainBtn');
+  const lbl = document.getElementById('sendBtnLabel');
+
+  if (!queue.length) {
+    btn.innerHTML = '<span>🎉</span> <span>Done! See summary</span>';
+    btn.onclick = finishSending;
+    btn.disabled = false;
+  } else {
+    const next = contacts[queue[0]];
+    lbl.textContent = `Send to ${next.name || 'next person'}`;
+    btn.disabled = false;
+  }
+}
+
+function finishSending() {
+  const skipped = contacts.filter((_, i) => {
+    const st = document.getElementById('ist-'+i);
+    return st && st.textContent === 'Skipped';
+  }).length;
+  document.getElementById('dSent').textContent = sentCount;
+  document.getElementById('dSkip').textContent = skipped;
+  document.getElementById('dTotal').textContent = contacts.length;
+  document.getElementById('bar2').style.display = 'none';
+  showPanel(3);
+}
+
+// ─── Panel navigation ──────────────────────────────────────
+function showPanel(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('p'+i).classList.toggle('active', i===n);
+    const s = document.getElementById('s'+i);
+    s.className = 'step';
+    if (i < n) s.classList.add('done');
+    else if (i === n) s.classList.add('active');
+  });
+  window.scrollTo(0,0);
+}
+
+// ─── Reset ─────────────────────────────────────────────────
+function resetAll() {
+  contacts = [];
+  sentCount = 0;
+  document.getElementById('bar2').style.display = 'none';
+  document.getElementById('bar1').style.display = 'flex';
+  renderPanel1();
+  updateBar1();
+  showPanel(1);
+}
+
+// ─── Utils ─────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Init ──────────────────────────────────────────────────
+updateBar1();
+if (!('contacts' in navigator)) {
+  document.getElementById('iosNotice').style.display = 'block';
+  document.getElementById('importBtn').style.display = 'none';
+}
+</script>
+</body>
+</html>
